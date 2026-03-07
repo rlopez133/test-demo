@@ -1,0 +1,11 @@
+---
+# List of packages to install
+# Override this variable to install additional packages
+install_packages_list:
+  - nginx
+
+# Package state: present, absent, latest, etc.
+# present: install if not already installed
+# absent: remove the package
+# latest: install or upgrade to the latest version
+install_packages_state: present

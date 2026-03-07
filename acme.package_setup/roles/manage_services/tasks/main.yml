@@ -1,0 +1,47 @@
+---
+- name: Manage system services
+  block:
+    - name: Validate service action parameter
+      ansible.builtin.assert:
+        that:
+          - manage_services_action in ['started', 'stopped', 'restarted', 'reloaded']
+        fail_msg: "manage_services_action must be one of: started, stopped, restarted, reloaded"
+      tags:
+        - services
+        - manage
+        - validate
+
+    - name: Manage services with systemd
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: "{{ manage_services_action }}"
+        enabled: "{{ manage_services_enabled }}"
+        daemon_reload: true
+      loop: "{{ manage_services_list }}"
+      register: service_manage_result
+      tags:
+        - services
+        - manage
+        - systemd
+
+    - name: Display service management results
+      ansible.builtin.debug:
+        msg: |
+          Service management completed successfully.
+          Services configured: {{ manage_services_list | join(', ') }}
+          Action: {{ manage_services_action }}
+          Enabled on boot: {{ manage_services_enabled }}
+      tags:
+        - services
+        - manage
+        - debug
+
+  rescue:
+    - name: Handle service management failure
+      ansible.builtin.debug:
+        msg: "Failed to manage services. Please verify service names and system logs."
+      failed_when: true
+      tags:
+        - services
+        - manage
+        - error

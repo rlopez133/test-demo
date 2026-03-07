@@ -1,32 +1,58 @@
 # ACME Package Setup Collection
 
-This Ansible collection provides roles for managing package installation and service lifecycle management.
+This Ansible collection provides roles for managing package installation and service lifecycle on target systems.
 
-## Roles
+## Features
 
-### nginx_package
-Handles installation and configuration of the nginx package.
+- Install and manage system packages
+- Start and enable services
+- Idempotent operations
+- Configurable package names and service names
 
-### nginx_service
-Manages the lifecycle (start, stop, enable, disable) of the nginx service.
+## Included Roles
+
+### install_packages
+
+Installs system packages using platform-specific package managers.
+
+**Variables:**
+- `install_packages_list`: List of packages to install (default: [nginx])
+- `install_packages_state`: Package state (default: present)
+
+### manage_services
+
+Manages service lifecycle (start, stop, enable, disable).
+
+**Variables:**
+- `manage_services_list`: List of services to manage
+- `manage_services_action`: Service state (default: started)
+- `manage_services_enabled`: Enable service on boot (default: true)
 
 ## Usage
 
-Include this collection in your playbooks using the fully qualified role names:
-
 ```yaml
-- name: Setup nginx
-  hosts: all
+---
+- hosts: all
+  collections:
+    - acme.package_setup
   roles:
-    - acme.package_setup.nginx_package
-    - acme.package_setup.nginx_service
+    - role: install_packages
+      vars:
+        install_packages_list:
+          - nginx
+          - curl
+    - role: manage_services
+      vars:
+        manage_services_list:
+          - nginx
+        manage_services_action: started
 ```
-
-## Variables
-
-All configurable variables are defined in each role's `defaults/main.yml`.
 
 ## Requirements
 
-- Ansible 2.15.0 or later
-- Target systems must have package manager (apt, yum, dnf, etc.)
+- Ansible >= 2.15.0
+- Target systems must have sudo access for package and service management
+
+## License
+
+GPL-3.0-or-later

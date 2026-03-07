@@ -1,18 +1,13 @@
 ---
-- name: Configure nginx package and service
+- name: Site playbook for package setup and service management
   hosts: all
   gather_facts: true
-  tasks:
-    - name: Include nginx_package role
-      ansible.builtin.include_role:
-        name: acme.package_setup.nginx_package
+  roles:
+    - role: install_packages
       tags:
-        - package
-        - nginx
-
-    - name: Include nginx_service role
-      ansible.builtin.include_role:
-        name: acme.package_setup.nginx_service
+        - packages
+        - install
+    - role: manage_services
       tags:
-        - service
-        - nginx
+        - services
+        - manage
