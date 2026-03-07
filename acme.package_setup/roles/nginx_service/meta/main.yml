@@ -1,12 +1,25 @@
 galaxy_info:
   author: Ansible Automation
-  description: Role for managing nginx service lifecycle
-  company: ACME
-  license: Apache-2.0
-  min_ansible_version: "2.15.0"
-  galaxy_tags:
+  description: Manage nginx package and service lifecycle
+  license: GPL-3.0-or-later
+  min_ansible_version: 2.15.0
+  platforms:
+    - name: EL
+      versions:
+        - 8
+        - 9
+    - name: Ubuntu
+      versions:
+        - 20.04
+        - 22.04
+        - 24.04
+    - name: Debian
+      versions:
+        - 11
+        - 12
+  tags:
+    - package
     - service
     - nginx
-    - lifecycle
 
 dependencies: []

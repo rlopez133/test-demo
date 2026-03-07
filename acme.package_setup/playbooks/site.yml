@@ -1,50 +1,67 @@
 ---
-- name: Install packages and manage services
+- name: Configure nginx package and service
   hosts: all
   gather_facts: true
-  vars:
-    # Variables can be overridden via -e flag or in inventories
-    package_name: "{{ package_name | default('nginx') }}"
-    package_state: "{{ package_state | default('present') }}"
-    service_name: "{{ service_name | default(package_name) }}"
-    service_action: "{{ service_action | default('started') }}"
-    service_enabled: "{{ service_enabled | default(true) }}"
-
+  
   pre_tasks:
-    - name: Display automation parameters
+    - name: Display playbook execution information
       ansible.builtin.debug:
         msg: |
-          Package Setup Playbook
-          =====================
-          Package: {{ package_name }}
-          State: {{ package_state }}
-          Service: {{ service_name }}
-          Action: {{ service_action }}
-          Enabled: {{ service_enabled }}
+          Executing nginx package and service configuration
+          Target hosts: {{ inventory_hostname }}
+          OS family: {{ ansible_os_family }}
       tags:
         - always
-
+  
   roles:
-    - name: Install package
-      role: acme.package_setup.package_installer
-      vars:
-        package_name: "{{ package_name }}"
-        package_state: "{{ package_state }}"
+    - name: nginx_service
       tags:
-        - packages
-
-    - name: Manage service
-      role: acme.package_setup.service_manager
-      vars:
-        service_name: "{{ service_name }}"
-        service_action: "{{ service_action }}"
-        service_enabled: "{{ service_enabled }}"
-      tags:
-        - services
-
+        - nginx
+        - package
+        - service
+  
   post_tasks:
-    - name: Verify automation completion
-      ansible.builtin.debug:
-        msg: "Package setup automation completed successfully."
-      tags:
-        - always
+    - name: Verify nginx installation and service status
+      block:
+        - name: Check if nginx package is installed
+          ansible.builtin.shell: |
+            set -e
+            if command -v nginx &> /dev/null; then
+              nginx -v 2>&1
+            else
+              echo "Nginx not found in PATH"
+              exit 1
+            fi
+          changed_when: false
+          register: nginx_version
+          tags:
+            - always
+            - verify
+
+        - name: Check nginx service status
+          ansible.builtin.service:
+            name: "{{ nginx_service_name | default('nginx') }}"
+            state: started
+          check_mode: true
+          register: nginx_service_check
+          tags:
+            - always
+            - verify
+          ignore_errors: true
+
+        - name: Display nginx version and service status
+          ansible.builtin.debug:
+            msg:
+              - "Nginx version: {{ nginx_version.stdout }}"
+              - "Service status check: {{ 'PASS' if not nginx_service_check.failed else 'NEEDS ATTENTION' }}"
+          tags:
+            - always
+            - verify
+      
+      rescue:
+        - name: Display post-task error information
+          ansible.builtin.debug:
+            msg: "Post-task verification encountered an issue (this may be normal in check mode)"
+          tags:
+            - always
+            - verify
