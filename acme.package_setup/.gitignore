@@ -1,12 +1,32 @@
+# Ansible
 *.pyc
 __pycache__/
-.DS_Store
+.ansible/
+.pytest_cache/
+.molecule/
+*.log
+
+# IDE
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
-.vscode/
-.idea/
-dist/
+.DS_Store
+
+# Testing
+.coverage
+htmlcov/
+.tox/
+
+# Vault
+vault_*
+*.vault
+
+# Distribution
 build/
+dist/
 *.egg-info/
-.ansible/
+
+# Project specific
+roles/nginx_service/.role_cache/

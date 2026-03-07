@@ -1,6 +1,20 @@
 ---
-# Service management defaults
-service_name: nginx
-service_state: started
-service_enabled: true
-service_daemon_reload: false
+# Nginx package configuration
+# Package name to install (typically 'nginx')
+nginx_package_name: nginx
+
+# Package state - present, absent, latest
+nginx_package_state: present
+
+# Nginx service configuration
+# Service name for systemd management
+nginx_service_name: nginx
+
+# Service state - started, stopped, restarted, reloaded
+nginx_service_state: started
+
+# Service enabled on boot
+nginx_service_enabled: true
+
+# Enable or disable nginx configuration validation
+nginx_validate_config: true
