@@ -1,0 +1,6 @@
+---
+# Service management defaults
+service_name: nginx
+service_state: started
+service_enabled: true
+service_daemon_reload: false

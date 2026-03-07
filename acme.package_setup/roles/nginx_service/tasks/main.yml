@@ -1,0 +1,17 @@
+---
+- name: Ensure systemd daemon is reloaded
+  ansible.builtin.systemd:
+    daemon_reload: "{{ service_daemon_reload }}"
+  when: service_daemon_reload | bool
+  tags:
+    - service
+    - nginx
+
+- name: Ensure nginx service is in desired state
+  ansible.builtin.service:
+    name: "{{ service_name }}"
+    state: "{{ service_state }}"
+    enabled: "{{ service_enabled }}"
+  tags:
+    - service
+    - nginx
