@@ -1,0 +1,58 @@
+---
+- name: Install packages on target system
+  block:
+    - name: Update apt cache on Debian-based systems
+      ansible.builtin.apt:
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+      tags:
+        - packages
+        - install
+        - apt-cache
+
+    - name: Install packages using apt on Debian-based systems
+      ansible.builtin.apt:
+        name: "{{ install_packages_list }}"
+        state: "{{ install_packages_state }}"
+      when: ansible_os_family == "Debian"
+      register: apt_install_result
+      tags:
+        - packages
+        - install
+        - debian
+
+    - name: Install packages using yum on RedHat-based systems
+      ansible.builtin.yum:
+        name: "{{ install_packages_list }}"
+        state: "{{ install_packages_state }}"
+      when: ansible_os_family == "RedHat"
+      register: yum_install_result
+      tags:
+        - packages
+        - install
+        - redhat
+
+    - name: Display package installation results
+      ansible.builtin.debug:
+        msg: |
+          Packages have been installed successfully.
+          {% if apt_install_result.changed %}
+          APT changes: {{ apt_install_result.changed }}
+          {% endif %}
+          {% if yum_install_result.changed %}
+          YUM changes: {{ yum_install_result.changed }}
+          {% endif %}
+      tags:
+        - packages
+        - install
+        - debug
+
+  rescue:
+    - name: Handle package installation failure
+      ansible.builtin.debug:
+        msg: "Failed to install packages. Please check system logs."
+      failed_when: true
+      tags:
+        - packages
+        - install
+        - error
