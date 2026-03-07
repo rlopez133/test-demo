@@ -1,0 +1,12 @@
+*.pyc
+__pycache__/
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+dist/
+build/
+*.egg-info/
+.ansible/

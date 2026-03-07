@@ -1,13 +1,50 @@
 ---
-- name: Site playbook for package setup and service management
+- name: Install packages and manage services
   hosts: all
   gather_facts: true
+  vars:
+    # Variables can be overridden via -e flag or in inventories
+    package_name: "{{ package_name | default('nginx') }}"
+    package_state: "{{ package_state | default('present') }}"
+    service_name: "{{ service_name | default(package_name) }}"
+    service_action: "{{ service_action | default('started') }}"
+    service_enabled: "{{ service_enabled | default(true) }}"
+
+  pre_tasks:
+    - name: Display automation parameters
+      ansible.builtin.debug:
+        msg: |
+          Package Setup Playbook
+          =====================
+          Package: {{ package_name }}
+          State: {{ package_state }}
+          Service: {{ service_name }}
+          Action: {{ service_action }}
+          Enabled: {{ service_enabled }}
+      tags:
+        - always
+
   roles:
-    - role: install_packages
+    - name: Install package
+      role: acme.package_setup.package_installer
+      vars:
+        package_name: "{{ package_name }}"
+        package_state: "{{ package_state }}"
       tags:
         - packages
-        - install
-    - role: manage_services
+
+    - name: Manage service
+      role: acme.package_setup.service_manager
+      vars:
+        service_name: "{{ service_name }}"
+        service_action: "{{ service_action }}"
+        service_enabled: "{{ service_enabled }}"
       tags:
         - services
-        - manage
+
+  post_tasks:
+    - name: Verify automation completion
+      ansible.builtin.debug:
+        msg: "Package setup automation completed successfully."
+      tags:
+        - always

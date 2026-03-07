@@ -1,0 +1,6 @@
+---
+# Package to install
+package_name: ""
+
+# Package state: present/absent
+package_state: present

@@ -1,5 +1,4 @@
 ---
-# External collection dependencies for this collection
-# All modules used in this collection are from ansible.builtin,
-# so no external collections are required.
+# No external collection dependencies required.
+# This collection uses only Ansible built-in modules.
 collections: []

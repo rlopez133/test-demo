@@ -1,0 +1,13 @@
+{
+  "collection_info": {
+    "namespace": "acme",
+    "name": "package_setup",
+    "version": "1.0.0",
+    "authors": ["Ansible Automation"],
+    "license": ["GPL-3.0-or-later"],
+    "description": "A collection for managing package installation and service lifecycle.",
+    "repository": "https://github.com/acme/package_setup",
+    "documentation": "https://github.com/acme/package_setup",
+    "issues": "https://github.com/acme/package_setup/issues"
+  }
+}

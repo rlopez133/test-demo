@@ -2,19 +2,14 @@
 namespace: acme
 name: package_setup
 version: 1.0.0
-readme: README.md
+description: |
+  A collection for managing package installation and service lifecycle.
+  Provides roles for installing packages and managing service states.
 authors:
-  - Ansible Automation Engineer
+  - Ansible Automation
 license:
   - GPL-3.0-or-later
-description: Collection for managing package installation and service lifecycle
 repository: https://github.com/acme/package_setup
-issues: https://github.com/acme/package_setup/issues
-documentation: https://github.com/acme/package_setup/wiki
-homepage: https://github.com/acme/package_setup
-tags:
-  - package
-  - service
-  - system
+readme: README.md
 requires_ansible: '>=2.15.0'
 dependencies: {}
