@@ -1,0 +1,22 @@
+---
+- name: Install package on target system
+  tags:
+    - packages
+    - install
+  block:
+    - name: Install package using ansible.builtin.package module
+      ansible.builtin.package:
+        name: "{{ package_name }}"
+        state: "{{ package_state }}"
+      register: package_install_result
+
+    - name: Log package installation result
+      ansible.builtin.debug:
+        msg: "Package {{ package_name }} {{ package_state }} - Changed: {{ package_install_result.changed }}"
+      tags:
+        - debug
+
+  rescue:
+    - name: Handle package installation failure
+      ansible.builtin.fail:
+        msg: "Failed to {{ package_state }} package {{ package_name }}. Please check package manager and package name."

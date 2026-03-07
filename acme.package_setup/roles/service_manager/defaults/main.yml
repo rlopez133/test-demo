@@ -1,0 +1,9 @@
+---
+# Service name to manage
+service_name: ""
+
+# Service state: started/stopped/restarted/reloaded
+service_action: started
+
+# Enable service at boot
+service_enabled: true

@@ -1,0 +1,27 @@
+---
+- name: Test acme.package_setup collection
+  hosts: localhost
+  gather_facts: true
+  vars:
+    package_name: "curl"
+    service_name: "cron"
+
+  tasks:
+    - name: Test package_installer role
+      ansible.builtin.include_role:
+        name: acme.package_setup.package_installer
+      vars:
+        package_name: "{{ package_name }}"
+        package_state: present
+
+    - name: Test service_manager role
+      ansible.builtin.include_role:
+        name: acme.package_setup.service_manager
+      vars:
+        service_name: "{{ service_name }}"
+        service_action: started
+        service_enabled: true
+
+    - name: Verify test completion
+      ansible.builtin.debug:
+        msg: "Collection tests completed successfully."
