@@ -1,0 +1,35 @@
+---
+- name: Update package cache
+  ansible.builtin.apt:
+    update_cache: "{{ package_update_cache }}"
+    cache_valid_time: "{{ package_cache_valid_time }}"
+  when: ansible_os_family == "Debian"
+  tags:
+    - package
+    - nginx
+
+- name: Update package cache (RedHat)
+  ansible.builtin.yum:
+    update_cache: true
+  when: ansible_os_family == "RedHat"
+  tags:
+    - package
+    - nginx
+
+- name: Install nginx package (Debian)
+  ansible.builtin.apt:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  when: ansible_os_family == "Debian"
+  tags:
+    - package
+    - nginx
+
+- name: Install nginx package (RedHat)
+  ansible.builtin.yum:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  when: ansible_os_family == "RedHat"
+  tags:
+    - package
+    - nginx
