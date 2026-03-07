@@ -1,0 +1,11 @@
+---
+# Package installation defaults
+package_name: nginx
+package_state: present
+
+# Distribution-specific package names (override if needed)
+# nginx_package_redhat: nginx
+# nginx_package_debian: nginx
+
+# Optional: specific package version (leave empty for latest)
+package_version: ""

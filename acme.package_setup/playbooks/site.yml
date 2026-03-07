@@ -1,50 +1,40 @@
 ---
-- name: ACME Package Setup - Main Playbook
+- name: ACME Package Setup - Install and manage nginx
   hosts: all
-  gather_facts: true
-  vars_files:
-    - vars/main.yml
-  
+  gather_facts: yes
+  become: yes
+  tags:
+    - always
+
   pre_tasks:
-    - name: Display playbook information
-      ansible.builtin.debug:
-        msg: |
-          Starting ACME Package Setup collection
-          Target hosts: {{ inventory_hostname }}
-          Package to install: {{ package_name }}
-          Service to manage: {{ service_name }}
+    - name: Validate required variables
+      ansible.builtin.assert:
+        that:
+          - package_name is defined
+          - package_state is defined
+          - service_name is defined
+          - service_state is defined
+        fail_msg: "Required variables are not defined. Check defaults/main.yml"
       tags:
         - always
-  
+
   roles:
-    - role: acme.package_setup.package_install
+    - role: acme.package_setup.nginx_install
       tags:
-        - packages
-      vars:
-        package_name: "{{ package_name | default('nginx') }}"
-        package_state: "{{ package_state | default('present') }}"
+        - install
+        - package
     
-    - role: acme.package_setup.service_manage
+    - role: acme.package_setup.nginx_service
       tags:
-        - services
-      vars:
-        service_name: "{{ service_name | default('nginx') }}"
-        service_state: "{{ service_state | default('started') }}"
-        service_enabled: "{{ service_enabled | default(true) }}"
-  
+        - service
+        - manage
+
   post_tasks:
-    - name: Verify service is running
-      ansible.builtin.systemd_service:
-        name: "{{ service_name | default('nginx') }}"
-      register: service_info
-      tags:
-        - always
-    
-    - name: Display service status
+    - name: Display automation summary
       ansible.builtin.debug:
         msg: |
-          Service {{ service_name | default('nginx') }} status:
-          State: {{ service_info.status.ActiveState }}
-          Enabled: {{ service_info.status.UnitFileState }}
+          Automation completed successfully!
+          - Package: {{ package_name }} (state: {{ package_state }})
+          - Service: {{ service_name }} (state: {{ service_state }}, enabled: {{ service_enabled }})
       tags:
         - always

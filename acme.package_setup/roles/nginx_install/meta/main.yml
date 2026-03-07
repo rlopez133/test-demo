@@ -1,9 +1,9 @@
 ---
 galaxy_info:
-  role_name: nginx_service
+  role_name: nginx_install
   namespace: acme
   collection_name: package_setup
-  description: Manage nginx service lifecycle
+  description: Install and configure nginx web server
   company: ACME Corp
   license: GPL-3.0-or-later
   min_ansible_version: "2.15.0"
@@ -21,8 +21,8 @@ galaxy_info:
         - 11
         - 12
   galaxy_tags:
-    - service
+    - package
     - nginx
-    - systemd
+    - web-server
 
 dependencies: []

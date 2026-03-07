@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: yes
+  become: yes
+
+  roles:
+    - role: acme.package_setup.nginx_install
+      tags:
+        - install
+
+    - role: acme.package_setup.nginx_service
+      tags:
+        - service

@@ -1,0 +1,32 @@
+---
+- name: Install nginx package on RedHat-based systems
+  ansible.builtin.yum:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  register: _nginx_install_result
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - package
+    - nginx
+    - nginx_install
+
+- name: Install nginx package on Debian-based systems
+  ansible.builtin.apt:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+    update_cache: yes
+  register: _nginx_install_result
+  when: ansible_os_family == 'Debian'
+  tags:
+    - package
+    - nginx
+    - nginx_install
+
+- name: Ensure nginx package state is as expected
+  ansible.builtin.debug:
+    msg: "Package {{ package_name }} state is {{ package_state }}"
+  when: _nginx_install_result is changed
+  tags:
+    - package
+    - nginx
+    - nginx_install
