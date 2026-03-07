@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  role_name: service_manage
+  author: ACME Automation Team
+  description: Manage system service state and boot behavior
+  company: ACME
+  license: GPL-3.0-or-later
+  min_ansible_version: 2.15
+  platforms:
+    - name: EL
+      versions:
+        - 8
+        - 9
+    - name: Ubuntu
+      versions:
+        - 20.04
+        - 22.04
+    - name: Debian
+      versions:
+        - 11
+        - 12
+  tags:
+    - service
+    - system
+dependencies: []

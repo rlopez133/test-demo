@@ -1,6 +1,2 @@
----
 collections:
-  - name: ansible.posix
-    version: ">=1.1.0"
-  - name: ansible.builtin
-    version: ">=2.15.0"
+  # No external collections required - using only Ansible builtin modules

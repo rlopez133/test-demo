@@ -1,0 +1,53 @@
+---
+- name: Package installation tasks
+  tags:
+    - package_install
+    - packages
+
+- name: Update package cache (apt-based systems)
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ package_cache_valid_time }}"
+  when:
+    - ansible_pkg_mgr == 'apt'
+    - package_update_cache | bool
+  tags:
+    - package_install
+    - packages
+
+- name: Update package cache (yum-based systems)
+  ansible.builtin.yum:
+    update_cache: true
+  when:
+    - ansible_pkg_mgr == 'yum'
+    - package_update_cache | bool
+  tags:
+    - package_install
+    - packages
+
+- name: Install package via apt (Debian/Ubuntu)
+  ansible.builtin.apt:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  when: ansible_pkg_mgr == 'apt'
+  tags:
+    - package_install
+    - packages
+
+- name: Install package via yum (RHEL/CentOS/Fedora)
+  ansible.builtin.yum:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  when: ansible_pkg_mgr == 'yum'
+  tags:
+    - package_install
+    - packages
+
+- name: Install package via dnf (Fedora/RHEL 8+)
+  ansible.builtin.dnf:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  when: ansible_pkg_mgr == 'dnf'
+  tags:
+    - package_install
+    - packages

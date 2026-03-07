@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  role_name: package_install
+  author: ACME Automation Team
+  description: Install and manage system packages
+  company: ACME
+  license: GPL-3.0-or-later
+  min_ansible_version: 2.15
+  platforms:
+    - name: EL
+      versions:
+        - 8
+        - 9
+    - name: Ubuntu
+      versions:
+        - 20.04
+        - 22.04
+    - name: Debian
+      versions:
+        - 11
+        - 12
+  tags:
+    - package
+    - system
+dependencies: []
