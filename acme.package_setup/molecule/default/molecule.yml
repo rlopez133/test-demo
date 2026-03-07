@@ -1,0 +1,33 @@
+---
+version: 3
+
+drivername:
+  name: docker
+
+platforms:
+  - name: ubuntu-22
+    image: ubuntu:22.04
+    pre_build_image: yes
+    privileged: yes
+    systemd: yes
+    init_sys: systemd
+  
+  - name: rockylinux-9
+    image: rockylinux:9
+    pre_build_image: yes
+    privileged: yes
+    systemd: yes
+    init_sys: systemd
+
+provisioner:
+  name: ansible
+  playbooks:
+    converge: converge.yml
+    verify: verify.yml
+  options:
+    vvv: true
+  env:
+    ANSIBLE_LIBRARY: roles
+
+verifier:
+  name: ansible

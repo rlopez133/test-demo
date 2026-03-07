@@ -1,2 +1,4 @@
+---
 collections:
-  # No external collections required - using only Ansible builtin modules
+  - name: ansible.posix
+    version: ">=1.1.0"

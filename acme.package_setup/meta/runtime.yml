@@ -1,1 +1,7 @@
+---
 requires_ansible: ">=2.15.0"
+actions:
+  acme.package_setup.nginx_install:
+    plugin_type: role
+  acme.package_setup.nginx_service:
+    plugin_type: role
