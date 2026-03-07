@@ -1,67 +1,50 @@
 ---
-- name: Configure nginx package and service
+- name: ACME Package Setup - Main Playbook
   hosts: all
   gather_facts: true
+  vars_files:
+    - vars/main.yml
   
   pre_tasks:
-    - name: Display playbook execution information
+    - name: Display playbook information
       ansible.builtin.debug:
         msg: |
-          Executing nginx package and service configuration
+          Starting ACME Package Setup collection
           Target hosts: {{ inventory_hostname }}
-          OS family: {{ ansible_os_family }}
+          Package to install: {{ package_name }}
+          Service to manage: {{ service_name }}
       tags:
         - always
   
   roles:
-    - name: nginx_service
+    - role: acme.package_setup.package_install
       tags:
-        - nginx
-        - package
-        - service
+        - packages
+      vars:
+        package_name: "{{ package_name | default('nginx') }}"
+        package_state: "{{ package_state | default('present') }}"
+    
+    - role: acme.package_setup.service_manage
+      tags:
+        - services
+      vars:
+        service_name: "{{ service_name | default('nginx') }}"
+        service_state: "{{ service_state | default('started') }}"
+        service_enabled: "{{ service_enabled | default(true) }}"
   
   post_tasks:
-    - name: Verify nginx installation and service status
-      block:
-        - name: Check if nginx package is installed
-          ansible.builtin.shell: |
-            set -e
-            if command -v nginx &> /dev/null; then
-              nginx -v 2>&1
-            else
-              echo "Nginx not found in PATH"
-              exit 1
-            fi
-          changed_when: false
-          register: nginx_version
-          tags:
-            - always
-            - verify
-
-        - name: Check nginx service status
-          ansible.builtin.service:
-            name: "{{ nginx_service_name | default('nginx') }}"
-            state: started
-          check_mode: true
-          register: nginx_service_check
-          tags:
-            - always
-            - verify
-          ignore_errors: true
-
-        - name: Display nginx version and service status
-          ansible.builtin.debug:
-            msg:
-              - "Nginx version: {{ nginx_version.stdout }}"
-              - "Service status check: {{ 'PASS' if not nginx_service_check.failed else 'NEEDS ATTENTION' }}"
-          tags:
-            - always
-            - verify
-      
-      rescue:
-        - name: Display post-task error information
-          ansible.builtin.debug:
-            msg: "Post-task verification encountered an issue (this may be normal in check mode)"
-          tags:
-            - always
-            - verify
+    - name: Verify service is running
+      ansible.builtin.systemd_service:
+        name: "{{ service_name | default('nginx') }}"
+      register: service_info
+      tags:
+        - always
+    
+    - name: Display service status
+      ansible.builtin.debug:
+        msg: |
+          Service {{ service_name | default('nginx') }} status:
+          State: {{ service_info.status.ActiveState }}
+          Enabled: {{ service_info.status.UnitFileState }}
+      tags:
+        - always
