@@ -1,35 +1,44 @@
-# Acme Package Setup Collection
+# ACME Package Setup Collection
 
-This Ansible collection provides roles for managing package installation and service lifecycle on Linux systems.
+This Ansible collection provides automation for package installation and service management.
 
-## Roles
+## Features
 
-### package_installer
-Installs and manages system packages using the appropriate package manager.
-
-**Variables:**
-- `package_name`: Name of the package to install (default: nginx)
-- `package_state`: Desired state of the package (default: present)
-
-### service_manager
-Manages service startup, stopping, and enabling on Linux systems.
-
-**Variables:**
-- `service_name`: Name of the service to manage (default: nginx)
-- `service_state`: Desired state of the service (default: started)
-- `service_enabled`: Whether service should start on boot (default: true)
-
-## Usage
-
-```yaml
-- hosts: all
-  collections:
-    - acme.package_setup
-  roles:
-    - package_installer
-    - service_manager
-```
+- Install or remove packages using the system package manager
+- Manage service state (started, stopped, enabled, disabled)
+- Idempotent operations with proper state management
+- Support for handlers to restart services on configuration changes
 
 ## Requirements
-- Ansible 2.15.0 or later
-- Target systems must be Linux-based
+
+- Ansible Core >= 2.15.0
+- Target systems: Linux (RHEL, Ubuntu, Debian, etc.)
+
+## Included Roles
+
+### install_package
+
+Installs or removes packages on target systems using the native package manager.
+
+**Variables:**
+- `package_name`: Name of the package to install/remove (default: 'nginx')
+- `package_state`: State of the package - present or absent (default: 'present')
+
+### manage_service
+
+Manages service state and enables/disables services on startup.
+
+**Variables:**
+- `service_name`: Name of the service to manage (default: 'nginx')
+- `service_state`: Desired state - started, stopped, restarted, reloaded (default: 'started')
+- `service_enabled`: Enable service on boot (default: true)
+
+## Quick Start
+
+```bash
+ansible-playbook acme.package_setup.site -e "package_name=nginx package_state=present service_name=nginx service_state=started"
+```
+
+## License
+
+GPL-3.0-or-later
