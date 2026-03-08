@@ -1,21 +1,16 @@
 ---
-# Package installation defaults
-# This role handles installation of system packages across different OS families
+# Default variables for package installation role
 
-# Package name to install
-# Examples: nginx, apache2, postgresql, etc.
-package_name: nginx
+# List of packages to install
+# Default includes nginx as per workflow requirements
+packages_to_install:
+  - nginx
 
 # Package state: present, absent, latest
-# present: ensure package is installed (may be outdated)
-# absent: ensure package is not installed
-# latest: ensure package is at the latest version
 package_state: present
 
-# Update package cache before installing (recommended)
-# Set to false if you have frequent updates and want to skip cache refresh
-package_update_cache: true
+# Update package cache before installation (for apt-based systems)
+update_package_cache: true
 
-# Cache valid time in seconds (for apt-based systems)
-# Default: 3600 seconds (1 hour)
-package_cache_valid_time: 3600
+# Cache validity time in seconds (for apt-based systems)
+cache_valid_time: 3600

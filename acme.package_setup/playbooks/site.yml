@@ -1,31 +1,47 @@
 ---
-- name: ACME Package Setup - Main Playbook
+# Main playbook for package setup and service management
+# Orchestrates the installation and startup of system packages
+
+- name: Setup packages and manage services
   hosts: all
+  become: true
   gather_facts: true
+  tags:
+    - always
+
   pre_tasks:
-    - name: Display automation intent
+    - name: Display target host information
       ansible.builtin.debug:
-        msg: |
-          Executing ACME Package Setup Collection
-          Step 1: Install package {{ package_name }}
-          Step 2: Manage service {{ service_name }}
+        msg: "Installing and managing services on {{ inventory_hostname }} ({{ ansible_os_family }})"
       tags:
-        - always
+        - debug
 
   roles:
-    - name: Install packages
-      role: acme.package_setup.package_installer
+    - name: Install required packages
+      role: acme.package_setup.package_install
       tags:
-        - packages
+        - package
+        - always
 
-    - name: Manage services
-      role: acme.package_setup.service_manager
+    - name: Manage and start services
+      role: acme.package_setup.service_manage
       tags:
-        - services
+        - service
+        - always
 
   post_tasks:
-    - name: Verify automation completion
-      ansible.builtin.debug:
-        msg: "ACME Package Setup Collection execution completed successfully"
+    - name: Verify service is running
+      ansible.builtin.systemd:
+        name: "{{ service_name }}"
+      register: service_status
       tags:
-        - always
+        - service
+        - verify
+
+    - name: Display service status
+      ansible.builtin.debug:
+        msg: "Service {{ service_name }} status: {{ service_status.status.ActiveState }}"
+      tags:
+        - service
+        - verify
+        - debug

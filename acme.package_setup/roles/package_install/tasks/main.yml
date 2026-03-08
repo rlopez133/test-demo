@@ -1,53 +1,31 @@
 ---
-- name: Package installation tasks
-  tags:
-    - package_install
-    - packages
+# Tasks for installing system packages
 
-- name: Update package cache (apt-based systems)
+- name: Update apt cache on Debian-based systems
   ansible.builtin.apt:
-    update_cache: true
-    cache_valid_time: "{{ package_cache_valid_time }}"
+    cache_valid_time: "{{ cache_valid_time }}"
+    update_cache: "{{ update_package_cache }}"
   when:
-    - ansible_pkg_mgr == 'apt'
-    - package_update_cache | bool
+    - ansible_os_family == 'Debian'
+    - update_package_cache | bool
   tags:
+    - package
     - package_install
-    - packages
 
-- name: Update package cache (yum-based systems)
-  ansible.builtin.yum:
-    update_cache: true
-  when:
-    - ansible_pkg_mgr == 'yum'
-    - package_update_cache | bool
-  tags:
-    - package_install
-    - packages
-
-- name: Install package via apt (Debian/Ubuntu)
+- name: Install packages on Debian-based systems
   ansible.builtin.apt:
-    name: "{{ package_name }}"
+    name: "{{ packages_to_install }}"
     state: "{{ package_state }}"
-  when: ansible_pkg_mgr == 'apt'
+  when: ansible_os_family == 'Debian'
   tags:
+    - package
     - package_install
-    - packages
 
-- name: Install package via yum (RHEL/CentOS/Fedora)
+- name: Install packages on RedHat-based systems
   ansible.builtin.yum:
-    name: "{{ package_name }}"
+    name: "{{ packages_to_install }}"
     state: "{{ package_state }}"
-  when: ansible_pkg_mgr == 'yum'
+  when: ansible_os_family == 'RedHat'
   tags:
+    - package
     - package_install
-    - packages
-
-- name: Install package via dnf (Fedora/RHEL 8+)
-  ansible.builtin.dnf:
-    name: "{{ package_name }}"
-    state: "{{ package_state }}"
-  when: ansible_pkg_mgr == 'dnf'
-  tags:
-    - package_install
-    - packages

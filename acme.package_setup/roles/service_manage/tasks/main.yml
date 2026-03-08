@@ -1,23 +1,29 @@
 ---
-- name: Service management tasks
-  tags:
-    - service_manage
-    - services
+# Tasks for managing system services
 
-- name: Reload systemd daemon if requested
-  ansible.builtin.systemd_service:
+- name: Ensure systemd daemon is reloaded
+  ansible.builtin.systemd:
     daemon_reload: true
-  when: service_daemon_reload | bool
+  when: daemon_reload | bool
   tags:
+    - service
     - service_manage
-    - services
 
-- name: Manage service state and boot behavior
-  ansible.builtin.systemd_service:
+- name: Manage service state and enablement
+  ansible.builtin.systemd:
     name: "{{ service_name }}"
     state: "{{ service_state }}"
     enabled: "{{ service_enabled }}"
-    daemon_reload: false
   tags:
+    - service
     - service_manage
-    - services
+  register: service_manage_result
+
+- name: Display service management result
+  ansible.builtin.debug:
+    msg: "Service {{ service_name }} is {{ service_state }}"
+  when: service_manage_result is defined
+  tags:
+    - service
+    - service_manage
+    - debug
