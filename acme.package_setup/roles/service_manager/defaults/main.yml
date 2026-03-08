@@ -1,9 +1,18 @@
 ---
-# Name of the service to manage
-service_name: nginx
+# Service manager defaults
+# These variables control service lifecycle behavior
 
-# Desired state of the service (started, stopped, restarted, reloaded)
-service_state: started
+# Name of the service to manage
+service_name: "nginx"
+
+# Desired service state (started/stopped/restarted/reloaded)
+service_state: "started"
 
 # Whether service should be enabled to start on boot
 service_enabled: true
+
+# Daemon reload before managing service (systemd systems)
+service_daemon_reload: true
+
+# Number of seconds to wait for service state change
+service_timeout: 30

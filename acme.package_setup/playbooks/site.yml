@@ -1,21 +1,25 @@
 ---
-# Main playbook for ACME Package Setup collection
-# Purpose: Orchestrate package installation and service management
-
-- name: Execute package setup automation
+- name: Deploy and manage packages and services
   hosts: all
   gather_facts: true
   tasks:
-    - name: Include install_package role
+    - name: Install package
       ansible.builtin.include_role:
-        name: acme.package_setup.install_package
+        name: acme.package_setup.package_installer
+      vars:
+        package_name: "{{ package_to_install | default('nginx') }}"
+        package_state: "{{ package_state_desired | default('present') }}"
       tags:
         - package
-        - always
+        - install
 
-    - name: Include manage_service role
+    - name: Manage service lifecycle
       ansible.builtin.include_role:
-        name: acme.package_setup.manage_service
+        name: acme.package_setup.service_manager
+      vars:
+        service_name: "{{ service_name_to_manage | default('nginx') }}"
+        service_state: "{{ service_state_desired | default('started') }}"
+        service_enabled: "{{ service_auto_start | default(true) }}"
       tags:
         - service
-        - always
+        - lifecycle
