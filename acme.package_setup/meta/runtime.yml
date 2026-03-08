@@ -1,2 +1,6 @@
----
 requires_ansible: '>=2.15.0'
+actions:
+  acme.package_setup.install_package:
+    action_type: normal
+  acme.package_setup.manage_service:
+    action_type: normal

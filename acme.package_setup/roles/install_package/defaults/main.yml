@@ -1,0 +1,14 @@
+---
+# Package installation defaults
+
+# Name of the package to install or remove
+package_name: 'nginx'
+
+# State of the package: present or absent
+package_state: 'present'
+
+# Update package cache before installation (if supported by package manager)
+package_update_cache: false
+
+# Cache valid time in seconds (for apt-based systems)
+package_cache_valid_time: 3600

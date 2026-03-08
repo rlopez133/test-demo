@@ -1,5 +1,5 @@
 ---
-# External collection dependencies
-# This collection uses only Ansible built-in modules and does not require
-# any external collections beyond ansible.builtin (included with Ansible Core)
+# Collection dependencies for ACME Package Setup
+# This collection uses only Ansible built-in modules and does not require external collections
+
 collections: []

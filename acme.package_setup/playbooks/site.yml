@@ -1,34 +1,21 @@
 ---
-- name: Main playbook for package setup and service management
+# Main playbook for ACME Package Setup collection
+# Purpose: Orchestrate package installation and service management
+
+- name: Execute package setup automation
   hosts: all
   gather_facts: true
-  tags:
-    - always
-
-  pre_tasks:
-    - name: Display target system information
-      ansible.builtin.debug:
-        msg: |
-          Target: {{ inventory_hostname }}
-          OS Family: {{ ansible_os_family }}
-          Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}
+  tasks:
+    - name: Include install_package role
+      ansible.builtin.include_role:
+        name: acme.package_setup.install_package
       tags:
+        - package
         - always
 
-  roles:
-    - name: Install packages
-      role: package_installer
+    - name: Include manage_service role
+      ansible.builtin.include_role:
+        name: acme.package_setup.manage_service
       tags:
-        - packages
-
-    - name: Manage services
-      role: service_manager
-      tags:
-        - services
-
-  post_tasks:
-    - name: Display completion message
-      ansible.builtin.debug:
-        msg: "Package setup and service management completed successfully"
-      tags:
+        - service
         - always

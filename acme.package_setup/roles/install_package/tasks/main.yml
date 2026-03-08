@@ -1,0 +1,61 @@
+---
+# Role: install_package
+# Purpose: Install or remove packages on target systems using the native package manager
+
+- name: Update package cache (apt)
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ package_cache_valid_time }}"
+  when:
+    - ansible_pkg_mgr == 'apt'
+    - package_update_cache | bool
+  tags:
+    - package
+    - package_install
+
+- name: Update package cache (yum)
+  ansible.builtin.yum:
+    update_cache: true
+  when:
+    - ansible_pkg_mgr in ['yum', 'dnf']
+    - package_update_cache | bool
+  tags:
+    - package
+    - package_install
+
+- name: Install package using apt (Debian/Ubuntu)
+  ansible.builtin.apt:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  register: apt_install_result
+  when: ansible_pkg_mgr == 'apt'
+  tags:
+    - package
+    - package_install
+
+- name: Install package using yum/dnf (RHEL/CentOS/Fedora)
+  ansible.builtin.yum:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  register: yum_install_result
+  when: ansible_pkg_mgr in ['yum', 'dnf']
+  tags:
+    - package
+    - package_install
+
+- name: Install package using zypper (openSUSE/SLES)
+  community.general.zypper:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  register: zypper_install_result
+  when: ansible_pkg_mgr == 'zypper'
+  tags:
+    - package
+    - package_install
+
+- name: Display package installation result
+  ansible.builtin.debug:
+    msg: "Package '{{ package_name }}' state set to '{{ package_state }}' successfully"
+  tags:
+    - package
+    - package_install

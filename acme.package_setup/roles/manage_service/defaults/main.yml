@@ -1,0 +1,14 @@
+---
+# Service management defaults
+
+# Name of the service to manage
+service_name: 'nginx'
+
+# Desired state of the service: started, stopped, restarted, reloaded
+service_state: 'started'
+
+# Enable service on system startup
+service_enabled: true
+
+# Daemon reload before service state changes (for systemd)
+service_daemon_reload: false

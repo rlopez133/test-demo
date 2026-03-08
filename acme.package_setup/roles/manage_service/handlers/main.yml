@@ -1,0 +1,22 @@
+---
+# Service management handlers
+
+- name: Restart service
+  ansible.builtin.service:
+    name: "{{ service_name }}"
+    state: restarted
+    daemon_reload: "{{ service_daemon_reload }}"
+  listen: restart_service
+  tags:
+    - service
+    - service_manage
+
+- name: Reload service
+  ansible.builtin.service:
+    name: "{{ service_name }}"
+    state: reloaded
+    daemon_reload: "{{ service_daemon_reload }}"
+  listen: reload_service
+  tags:
+    - service
+    - service_manage
