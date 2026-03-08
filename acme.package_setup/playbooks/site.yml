@@ -1,47 +1,42 @@
 ---
-# Main playbook: Package and Service Setup
-# Installs packages and manages their associated services
+# Main playbook for ACME Package Setup collection
+# Orchestrates package installation and service management
 
-- name: Setup packages and services
+- name: Configure packages and services
   hosts: all
   gather_facts: true
-  vars_files: []
+  tags:
+    - always
 
   pre_tasks:
-    - name: Display automation purpose
+    - name: Display target system information
       ansible.builtin.debug:
         msg: |
-          Starting package installation and service management workflow
-          Package: {{ package_name | default('nginx') }}
-          Service: {{ service_name | default('nginx') }}
+          Target: {{ inventory_hostname }}
+          OS Family: {{ ansible_os_family }}
+          Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}
       tags:
-        - always
+        - debug
 
   roles:
-    # Step 1: Install package with specified state
-    - role: package_installer
-      vars:
-        package_name: nginx
-        package_state: present
+    - role: package_manager
       tags:
-        - package
-        - install
+        - packages
+      vars:
+        package_name: '{{ package_name | default("nginx") }}'
+        package_state: '{{ package_state | default("present") }}'
 
-    # Step 2: Manage service (start/enable)
-    - role: service_manager
-      vars:
-        service_name: nginx
-        service_action: started
-        service_enabled: true
+    - role: service_controller
       tags:
-        - service
-        - manage
+        - services
+      vars:
+        service_name: '{{ service_name | default("nginx") }}'
+        service_state: '{{ service_state | default("started") }}'
+        service_enabled: '{{ service_enabled | default(true) }}'
 
   post_tasks:
-    - name: Confirm automation completion
+    - name: Verify final system state
       ansible.builtin.debug:
-        msg: |
-          Package and service setup completed successfully
-          Service Status: {{ service_status.status['ActiveState'] | default('unknown') }}
+        msg: 'Package and service configuration complete on {{ inventory_hostname }}'
       tags:
-        - always
+        - debug

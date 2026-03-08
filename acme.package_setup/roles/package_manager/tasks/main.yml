@@ -1,0 +1,63 @@
+---
+# Tasks for managing package installation and removal
+# This role handles OS-agnostic package management across different systems
+
+- name: Validate package_name is defined
+  ansible.builtin.assert:
+    that:
+      - package_name is defined
+      - package_name | length > 0
+    fail_msg: 'package_name variable must be defined and not empty'
+    quiet: true
+  tags:
+    - package
+    - validate
+
+- name: Validate package_state is valid
+  ansible.builtin.assert:
+    that:
+      - package_state in ['present', 'absent']
+    fail_msg: 'package_state must be either "present" or "absent"'
+    quiet: true
+  tags:
+    - package
+    - validate
+
+- name: Install package on RHEL-based systems
+  ansible.builtin.yum:
+    name: '{{ package_name }}'
+    state: '{{ package_state }}'
+  when:
+    - ansible_os_family == 'RedHat'
+  tags:
+    - package
+    - rhel
+
+- name: Install package on Debian-based systems
+  ansible.builtin.apt:
+    name: '{{ package_name }}'
+    state: '{{ package_state }}'
+    update_cache: '{{ update_cache }}'
+    cache_valid_time: '{{ cache_valid_time }}'
+  when:
+    - ansible_os_family == 'Debian'
+  tags:
+    - package
+    - debian
+
+- name: Install package on Alpine systems
+  ansible.builtin.apk:
+    name: '{{ package_name }}'
+    state: '{{ package_state }}'
+  when:
+    - ansible_os_family == 'Alpine'
+  tags:
+    - package
+    - alpine
+
+- name: Display package installation result
+  ansible.builtin.debug:
+    msg: 'Package {{ package_name }} state is now {{ package_state }}'
+  tags:
+    - package
+    - debug

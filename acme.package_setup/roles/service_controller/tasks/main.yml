@@ -1,0 +1,46 @@
+---
+# Tasks for managing service state and lifecycle
+# This role handles OS-agnostic service management using systemd
+
+- name: Validate service_name is defined
+  ansible.builtin.assert:
+    that:
+      - service_name is defined
+      - service_name | length > 0
+    fail_msg: 'service_name variable must be defined and not empty'
+    quiet: true
+  tags:
+    - service
+    - validate
+
+- name: Validate service_state is valid
+  ansible.builtin.assert:
+    that:
+      - service_state in ['started', 'stopped', 'restarted', 'reloaded']
+    fail_msg: 'service_state must be one of: started, stopped, restarted, reloaded'
+    quiet: true
+  tags:
+    - service
+    - validate
+
+- name: Manage service state with systemd
+  ansible.builtin.systemd_service:
+    name: '{{ service_name }}'
+    state: '{{ service_state }}'
+    enabled: '{{ service_enabled }}'
+    daemon_reload: '{{ daemon_reload }}'
+  tags:
+    - service
+    - systemd
+  register: service_result
+
+- name: Display service state result
+  ansible.builtin.debug:
+    msg: |
+      Service: {{ service_name }}
+      Current State: {{ service_state }}
+      Enabled at Boot: {{ service_enabled }}
+      Service Active: {{ service_result.status.ActiveState | default('unknown') }}
+  tags:
+    - service
+    - debug

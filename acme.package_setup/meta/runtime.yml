@@ -1,1 +1,7 @@
-requires_ansible: ">=2.15.0"
+---
+requires_ansible: '>=2.15.0'
+actions:
+  acme.package_setup.package_manager:
+    forward_to_host: true
+  acme.package_setup.service_controller:
+    forward_to_host: true

@@ -1,0 +1,15 @@
+---
+# Package management variables
+# Configure these variables to control package installation behavior
+
+# Name of the package to manage (e.g., 'nginx', 'apache2', 'postgresql')
+package_name: nginx
+
+# State of the package: 'present' to install, 'absent' to remove
+package_state: present
+
+# Whether to update package cache before install (applies to apt systems)
+update_cache: false
+
+# Cache valid time in seconds (for apt systems, prevents excessive updates)
+cache_valid_time: 3600

@@ -1,0 +1,18 @@
+---
+# Service management variables
+# Configure these variables to control service lifecycle behavior
+
+# Name of the service to manage (e.g., 'nginx', 'httpd', 'postgresql')
+service_name: nginx
+
+# State of the service: 'started', 'stopped', 'restarted', 'reloaded'
+service_state: started
+
+# Whether to enable the service to start at boot
+service_enabled: true
+
+# Daemon reload (systemd only): reload systemd daemon if service file changed
+daemon_reload: false
+
+# Service timeout in seconds for start/stop operations
+service_timeout: 30
