@@ -1,47 +1,23 @@
 # ACME Package Setup Collection
 
-This Ansible collection provides roles for managing package installation and service lifecycle on target systems.
-
-## Requirements
-
-- Ansible Core >= 2.15.0
-- Target systems with support for package managers (apt, yum, dnf, etc.)
+This collection provides roles for managing package installation and service lifecycle automation.
 
 ## Roles
 
-### package_manager
-Installs or removes packages on target systems using the appropriate package manager for the OS family.
+### nginx_install
+Installs and starts the nginx web server on target systems.
 
-**Default Variables:**
-- `package_name`: Name of the package to manage (default: 'nginx')
-- `package_state`: Package state - present or absent (default: 'present')
+## Requirements
 
-### service_controller
-Manages service state (started, stopped, restarted, reloaded) and enables/disables services at boot.
-
-**Default Variables:**
-- `service_name`: Name of the service to manage (default: 'nginx')
-- `service_state`: Service state - started, stopped, restarted, reloaded (default: 'started')
-- `service_enabled`: Enable service at boot (default: true)
+- Ansible 2.15.0 or later
+- Target systems must have package managers configured (apt, yum, dnf, etc.)
 
 ## Usage
 
-```yaml
----
-- hosts: webservers
-  collections:
-    - acme.package_setup
-  vars:
-    package_name: nginx
-    package_state: present
-    service_name: nginx
-    service_state: started
-    service_enabled: true
-  roles:
-    - package_manager
-    - service_controller
+```bash
+ansible-playbook playbooks/site.yml
 ```
 
-## License
+## Variables
 
-GPL-3.0-or-later
+See individual role defaults for available variables.

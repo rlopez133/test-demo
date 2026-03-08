@@ -1,15 +1,6 @@
 ---
-# Playbook variables for ACME Package Setup collection
-# These can be overridden via -e flag or in inventory
+# Global variables for package setup playbooks
+# These can be overridden at inventory, group, or host level
 
-# Package to install
-package_name: nginx
-package_state: present
-package_update_cache: true
-package_cache_valid_time: 3600
-
-# Service to manage
-service_name: nginx
-service_state: started
-service_enabled: true
-service_daemon_reload: false
+# Enable verbose output for debugging
+verbose_mode: false
