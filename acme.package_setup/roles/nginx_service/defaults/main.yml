@@ -1,12 +1,12 @@
 ---
-# Service management variables for Nginx
+# Nginx Service Management Defaults
+# This role manages the nginx service state and boot enablement
 
-# nginx_service_name: Name of the Nginx systemd service
+# Service name
 nginx_service_name: nginx
 
-# nginx_service_state: Desired state of the Nginx service
-# Valid values: started, stopped, restarted, reloaded
+# Service state: started, stopped, restarted, reloaded
 nginx_service_state: started
 
-# nginx_service_enabled: Whether Nginx service should be enabled on boot
+# Enable service on boot
 nginx_service_enabled: true

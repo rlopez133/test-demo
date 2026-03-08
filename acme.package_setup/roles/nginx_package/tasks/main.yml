@@ -1,35 +1,12 @@
 ---
-- name: Update package cache
-  ansible.builtin.apt:
-    update_cache: "{{ package_update_cache }}"
-    cache_valid_time: "{{ package_cache_valid_time }}"
-  when: ansible_os_family == "Debian"
-  tags:
-    - package
-    - nginx
+# Nginx Package Installation Tasks
+# This role ensures nginx package is installed with proper state management
 
-- name: Update package cache (RedHat)
-  ansible.builtin.yum:
-    update_cache: true
-  when: ansible_os_family == "RedHat"
+- name: Ensure nginx package is in desired state
+  ansible.builtin.package:
+    name: "{{ nginx_package_name }}"
+    state: "{{ nginx_package_state }}"
+    update_cache: "{{ nginx_update_cache }}"
   tags:
-    - package
-    - nginx
-
-- name: Install nginx package (Debian)
-  ansible.builtin.apt:
-    name: "{{ package_name }}"
-    state: "{{ package_state }}"
-  when: ansible_os_family == "Debian"
-  tags:
-    - package
-    - nginx
-
-- name: Install nginx package (RedHat)
-  ansible.builtin.yum:
-    name: "{{ package_name }}"
-    state: "{{ package_state }}"
-  when: ansible_os_family == "RedHat"
-  tags:
-    - package
-    - nginx
+    - package-management
+    - nginx-install
