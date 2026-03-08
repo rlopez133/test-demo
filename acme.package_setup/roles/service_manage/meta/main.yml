@@ -1,25 +1,21 @@
----
 galaxy_info:
-  role_name: service_manage
-  author: ACME Automation Team
-  description: Manage system service state and boot behavior
-  company: ACME
+  author: Ansible Automation
+  description: Role for managing system services
+  company: Acme Corp
   license: GPL-3.0-or-later
-  min_ansible_version: 2.15
-  platforms:
-    - name: EL
-      versions:
-        - 8
-        - 9
+  min_ansible_version: '2.15.0'
+  supported_platforms:
     - name: Ubuntu
       versions:
-        - 20.04
-        - 22.04
+        - all
     - name: Debian
       versions:
-        - 11
-        - 12
-  tags:
-    - service
-    - system
-dependencies: []
+        - all
+    - name: CentOS
+      versions:
+        - all
+    - name: RedHat
+      versions:
+        - all
+dependencies:
+  - role: package_install

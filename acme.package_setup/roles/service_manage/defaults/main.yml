@@ -1,23 +1,14 @@
 ---
-# Service management defaults
-# This role handles management of systemd services
+# Default variables for service management role
 
 # Service name to manage
-# Examples: nginx, apache2, postgresql, ssh, etc.
 service_name: nginx
 
-# Service state: started, stopped, restarted, reloaded
-# started: ensure service is currently running
-# stopped: ensure service is currently stopped
-# restarted: always restart the service
-# reloaded: reload service configuration without full restart
+# Service action: started, stopped, restarted, reloaded
 service_state: started
 
-# Enable service to start on boot
-# true: service will start automatically at system boot
-# false: service will not start automatically
+# Enable service on boot
 service_enabled: true
 
-# Perform daemon reload (for systemd)
-# Useful when service files have been modified
-service_daemon_reload: false
+# Daemon reload before starting service (systemd)
+daemon_reload: false
