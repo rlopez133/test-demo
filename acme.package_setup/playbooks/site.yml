@@ -1,40 +1,17 @@
 ---
-- name: ACME Package Setup - Install and manage nginx
+- name: Complete Nginx setup workflow
   hosts: all
-  gather_facts: yes
-  become: yes
-  tags:
-    - always
-
-  pre_tasks:
-    - name: Validate required variables
-      ansible.builtin.assert:
-        that:
-          - package_name is defined
-          - package_state is defined
-          - service_name is defined
-          - service_state is defined
-        fail_msg: "Required variables are not defined. Check defaults/main.yml"
-      tags:
-        - always
-
+  gather_facts: true
+  vars:
+    nginx_package_name: nginx
+    nginx_package_state: present
+    nginx_service_name: nginx
+    nginx_service_state: started
+    nginx_service_enabled: true
   roles:
     - role: acme.package_setup.nginx_install
       tags:
-        - install
-        - package
-    
+        - nginx_install
     - role: acme.package_setup.nginx_service
       tags:
-        - service
-        - manage
-
-  post_tasks:
-    - name: Display automation summary
-      ansible.builtin.debug:
-        msg: |
-          Automation completed successfully!
-          - Package: {{ package_name }} (state: {{ package_state }})
-          - Service: {{ service_name }} (state: {{ service_state }}, enabled: {{ service_enabled }})
-      tags:
-        - always
+        - nginx_service

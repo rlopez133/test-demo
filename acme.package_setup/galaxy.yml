@@ -4,12 +4,14 @@ name: package_setup
 version: 1.0.0
 readme: README.md
 authors:
-  - Ansible Automation Team
+  - Ansible Automation
+description: Collection for managing package installation and service lifecycle
 license:
   - GPL-3.0-or-later
-description: Collection for managing package installation and service lifecycle
 repository: https://github.com/acme/package_setup
-documentation: https://docs.example.com/acme/package_setup
-changelog: CHANGELOG.md
-dependencies:
-  ansible.posix: ">=1.1.0"
+tags:
+  - package_management
+  - service_management
+  - system_administration
+requirements:
+  - ansible-core>=2.15.0
