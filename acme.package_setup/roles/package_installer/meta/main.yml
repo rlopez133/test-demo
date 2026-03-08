@@ -1,19 +1,20 @@
 ---
 galaxy_info:
-  author: Ansible Automation
-  description: Role for installing system packages
-  company: ACME
+  author: Ansible Automation Team
+  description: Role for installing and managing system packages
+  company: Acme
   license: GPL-3.0-or-later
-  min_ansible_version: '2.15.0'
+  min_ansible_version: 2.15.0
   platforms:
     - name: EL
       versions:
-        - all
+        - 8
+        - 9
     - name: Ubuntu
       versions:
-        - all
-    - name: Debian
-      versions:
-        - all
-
+        - 20.04
+        - 22.04
+  tags:
+    - package
+    - management
 dependencies: []

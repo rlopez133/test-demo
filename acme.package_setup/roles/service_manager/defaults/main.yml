@@ -1,9 +1,9 @@
 ---
-# Service name to manage
-service_name: ""
+# Name of the service to manage
+service_name: nginx
 
-# Service state: started/stopped/restarted/reloaded
-service_action: started
+# Desired state of the service (started, stopped, restarted, reloaded)
+service_state: started
 
-# Enable service at boot
+# Whether service should be enabled to start on boot
 service_enabled: true
