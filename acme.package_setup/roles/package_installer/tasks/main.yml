@@ -1,79 +1,41 @@
 ---
-- name: Update package cache (apt)
+# Install and manage system packages
+
+- name: Update package cache if requested
   ansible.builtin.apt:
-    cache_valid_time: 3600
-    update_cache: "{{ package_cache_update }}"
-  become: true
-  when:
-    - ansible_os_family == "Debian"
+    cache_valid_time: "{{ package_cache_timeout }}"
+    update_cache: "{{ package_update_cache }}"
+  when: ansible_os_family | default('') == 'Debian'
   tags:
     - package
-    - cache
+    - package_installer
 
-- name: Install or remove package (apt)
+- name: Install or manage package on Debian-based systems
   ansible.builtin.apt:
     name: "{{ package_name }}"
     state: "{{ package_state }}"
-  become: true
-  when:
-    - ansible_os_family == "Debian"
+  when: ansible_os_family | default('') == 'Debian'
   tags:
     - package
-    - install
+    - package_installer
 
-- name: Install or remove package (yum)
+- name: Install or manage package on RedHat-based systems
   ansible.builtin.yum:
     name: "{{ package_name }}"
     state: "{{ package_state }}"
-    allow_downgrade: "{{ package_allow_downgrade }}"
-  become: true
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version | int < 8 or not (ansible_distribution == "Fedora")
+  when: ansible_os_family | default('') == 'RedHat'
   tags:
     - package
-    - install
-
-- name: Install or remove package (dnf)
-  ansible.builtin.dnf:
-    name: "{{ package_name }}"
-    state: "{{ package_state }}"
-    allow_downgrade: "{{ package_allow_downgrade }}"
-  become: true
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version | int >= 8 or ansible_distribution == "Fedora"
-  tags:
-    - package
-    - install
-
-- name: Install or remove package (zypper)
-  community.general.zypper:
-    name: "{{ package_name }}"
-    state: "{{ package_state }}"
-  become: true
-  when:
-    - ansible_os_family == "Suse"
-  tags:
-    - package
-    - install
+    - package_installer
 
 - name: Validate package installation
   ansible.builtin.command:
-    cmd: "rpm -q {{ package_name }}"
-  register: package_validation
+    cmd: "which {{ package_name | split('-') | first }}"
+  register: package_check
+  failed_when: package_check.rc != 0
+  when: package_state == 'present'
   changed_when: false
-  failed_when: false
-  when:
-    - ansible_os_family == "RedHat"
-    - package_state == "present"
   tags:
     - package
-    - validate
-
-- name: Report package installation status
-  ansible.builtin.debug:
-    msg: "Package {{ package_name }} is {{ package_state }}"
-  tags:
-    - package
-    - debug
+    - package_installer
+    - validation

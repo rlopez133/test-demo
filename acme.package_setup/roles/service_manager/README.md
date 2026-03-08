@@ -1,54 +1,236 @@
 # Service Manager Role
 
-This role manages systemd services on Linux systems, handling startup, stopping, and enablement.
+Manages systemd service lifecycle operations across Linux systems.
 
-## Features
+## Role Purpose
 
-- Manages services using systemd_service module
-- Supports all service states (started, stopped, restarted, reloaded)
-- Enables/disables services for boot startup
-- Includes service status verification
-- Provides detailed status feedback
+This role provides a unified interface for:
+- Starting/stopping services
+- Restarting/reloading services
+- Enabling/disabling services at boot
+- Validating service state
+- Handling service readiness checks
 
-## Variables
+## Supported Platforms
 
-### Required
-None - all variables have sensible defaults.
+- Ubuntu (focal, jammy)
+- Debian (9, 10, 11, 12)
+- CentOS/RHEL (8, 9)
+- AlmaLinux (8, 9)
+- Rocky Linux (8, 9)
+- Any systemd-based distribution
 
-### Optional
+## Requirements
 
-- `service_name` (string, default: "nginx"): Name of the service to manage
-- `service_state` (string, default: "started"): Desired state - `started`, `stopped`, `restarted`, or `reloaded`
-- `service_enabled` (boolean, default: true): Whether service should start on boot
+- Ansible >= 2.15.0
+- systemd must be the init system
+- Appropriate sudo/root privileges for service operations
 
-## Example Playbook
+## Role Variables
+
+### Default Variables (defaults/main.yml)
 
 ```yaml
-- hosts: webservers
+service_name: nginx                    # Service to manage
+service_action: started                # Action: started, stopped, restarted, reloaded
+service_enabled: true                  # Enable at boot
+service_timeout: 30                    # Port wait timeout in seconds
+```
+
+### Optional Variables
+
+```yaml
+service_port: 80                       # Port to wait for (optional)
+service_host: 127.0.0.1                # Host to check (optional)
+```
+
+## Usage Examples
+
+### Start and Enable Service
+
+```yaml
+- hosts: all
   roles:
     - role: acme.package_setup.service_manager
       vars:
         service_name: nginx
-        service_state: started
+        service_action: started
         service_enabled: true
 ```
 
-## Tags
+### Stop and Disable Service
 
-- `service` - All service-related tasks
-- `service-manager` - Tasks specific to this role
+```yaml
+- hosts: all
+  roles:
+    - role: acme.package_setup.service_manager
+      vars:
+        service_name: nginx
+        service_action: stopped
+        service_enabled: false
+```
+
+### Restart Service
+
+```yaml
+- hosts: all
+  roles:
+    - role: acme.package_setup.service_manager
+      vars:
+        service_name: nginx
+        service_action: restarted
+```
+
+### Reload Configuration
+
+```yaml
+- hosts: all
+  roles:
+    - role: acme.package_setup.service_manager
+      vars:
+        service_name: nginx
+        service_action: reloaded
+```
+
+### With Port Validation
+
+```yaml
+- hosts: all
+  roles:
+    - role: acme.package_setup.service_manager
+      vars:
+        service_name: nginx
+        service_action: started
+        service_enabled: true
+        service_port: 80
+        service_host: "{{ ansible_default_ipv4.address }}"
+```
+
+### Selective Execution with Tags
+
+```bash
+ansible-playbook site.yml --tags service_manager
+ansible-playbook site.yml --tags "service,validation"
+```
+
+## Task Flow
+
+1. **Manage Service State**
+   - Uses `ansible.builtin.systemd_service` module
+   - Sets desired state (started/stopped/restarted/reloaded)
+   - Configures boot behavior (enabled/disabled)
+   - Reloads systemd daemon for configuration changes
+
+2. **Wait for Service Readiness** (conditional)
+   - Only runs when service is being started
+   - Only runs if service state actually changed
+   - Waits for specified port to be responsive
+   - Timeout is configurable via `service_timeout`
+   - Gracefully ignores failures (service may not expose a port)
+
+3. **Verify Service State**
+   - Queries systemd for current service state
+   - Only validates when action is 'started'
+   - Explicitly fails if service is not active
+   - Provides detailed status information
 
 ## Handlers
 
-This role defines handlers for common service operations:
-- `restart service` - Restarts the service
-- `reload service` - Reloads the service
-- `enable service` - Enables the service
+This role defines two handlers for external use:
 
-Other roles can notify these handlers to trigger service operations.
+### restart service
 
-## Notes
+Restarts the service with daemon reload:
 
-- Requires systemd on target systems (available on modern Linux distributions)
-- May require elevated privileges (sudo/root)
-- Service verification queries systemd for active state when service_state is "started"
+```yaml
+notify:
+  - restart service
+```
+
+Useful when configuration files change outside this role.
+
+### reload service
+
+Reloads service configuration without restart:
+
+```yaml
+notify:
+  - reload service
+```
+
+Useful for graceful configuration updates.
+
+## Error Handling
+
+- Service status validation fails explicitly if service is not active
+- Port wait operations timeout gracefully without failing overall
+- Uses fact queries (`changed_when: false`) for validation
+- Provides clear error messages for troubleshooting
+
+## Idempotency
+
+All tasks are fully idempotent:
+- Service state checks prevent unnecessary restarts
+- Port wait only triggers on actual state changes
+- Status validation uses information-only queries
+- Multiple executions produce no additional changes
+
+## Troubleshooting
+
+### Service Not Found
+
+```
+ERROR! Service 'nonexistent' not found
+```
+
+**Solution**: Verify service name is correct and installed.
+
+### Permission Denied
+
+**Solution**: Ensure play is executed with appropriate privilege escalation:
+
+```yaml
+- hosts: all
+  become: true
+  roles:
+    - acme.package_setup.service_manager
+```
+
+### Port Wait Timeout
+
+```
+WARNING: Port wait timed out - service may not expose this port
+```
+
+**Solution**: Either increase `service_timeout` or verify service actually exposes the configured port.
+
+## Dependencies
+
+None. Uses only Ansible builtin collections.
+
+## Integration Example
+
+Typical workflow combining package and service roles:
+
+```yaml
+- hosts: webservers
+  become: true
+  roles:
+    # Step 1: Install package
+    - role: acme.package_setup.package_installer
+      vars:
+        package_name: nginx
+        package_state: present
+    
+    # Step 2: Start and enable service
+    - role: acme.package_setup.service_manager
+      vars:
+        service_name: nginx
+        service_action: started
+        service_enabled: true
+        service_port: 80
+```
+
+## License
+
+GPL-3.0-or-later
