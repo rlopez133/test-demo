@@ -1,11 +1,9 @@
 ---
-# Package installation defaults
-package_name: nginx
-package_state: present
+# Package management variables for Nginx installation
 
-# Distribution-specific package names (override if needed)
-# nginx_package_redhat: nginx
-# nginx_package_debian: nginx
+# nginx_package_name: Name of the Nginx package to install
+nginx_package_name: nginx
 
-# Optional: specific package version (leave empty for latest)
-package_version: ""
+# nginx_package_state: Desired state of the Nginx package
+# Valid values: present, absent, latest
+nginx_package_state: present

@@ -1,31 +1,10 @@
 ---
-- name: Ensure systemd daemon is reloaded if requested
-  ansible.builtin.systemd:
-    daemon_reload: yes
-  when: service_daemon_reload | bool
+- name: Ensure Nginx service is in desired state
+  become: true
+  ansible.builtin.service:
+    name: "{{ nginx_service_name }}"
+    state: "{{ nginx_service_state }}"
+    enabled: "{{ nginx_service_enabled }}"
   tags:
-    - service
+    - service_manage
     - nginx
-    - nginx_service
-
-- name: Manage nginx service state
-  ansible.builtin.systemd:
-    name: "{{ service_name }}"
-    state: "{{ service_state }}"
-    enabled: "{{ service_enabled }}"
-  register: _service_result
-  tags:
-    - service
-    - nginx
-    - nginx_service
-
-- name: Verify nginx service is running
-  ansible.builtin.systemd:
-    name: "{{ service_name }}"
-  register: _service_status
-  failed_when: _service_status.status.ActiveState != 'active'
-  when: service_state == 'started'
-  tags:
-    - service
-    - nginx
-    - nginx_service
