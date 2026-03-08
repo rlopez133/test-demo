@@ -1,2 +1,1 @@
-requires_ansible: '>=2.15.0'
-actions_are_delegates: false
+requires_ansible: ">=2.15.0"

@@ -1,6 +1,4 @@
 ---
-collections:
-  - name: ansible.posix
-    version: ">=1.1.0"
-  - name: community.general
-    version: ">=5.0.0"
+# External collection dependencies
+# All dependencies are from Ansible builtin collections
+collections: []

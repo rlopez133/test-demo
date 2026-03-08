@@ -1,29 +1,19 @@
 galaxy_info:
   author: Ansible Automation
-  description: Manage system services lifecycle
-  company: ACME
-  license: GPL-3.0-or-later
-  min_ansible_version: '2.15.0'
+  description: Manages systemd service lifecycle operations
+  license:
+    - GPL-3.0-or-later
+  min_ansible_version: 2.15.0
   platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
     - name: EL
       versions:
         - 8
         - 9
-    - name: Debian
-      versions:
-        - 11
-        - 12
-    - name: Ubuntu
-      versions:
-        - 20.04
-        - 22.04
-        - 24.04
-    - name: SUSE
-      versions:
-        - 15
-  galaxy_tags:
+  tags:
     - service
-    - lifecycle
-    - systemd
-    - system
+    - management
 dependencies: []

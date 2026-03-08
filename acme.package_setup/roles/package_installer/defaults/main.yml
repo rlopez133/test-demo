@@ -1,18 +1,14 @@
 ---
-# Package installer defaults
-# These variables control package installation behavior
+# Package installer role default variables
 
 # Name of the package to install
-package_name: "nginx"
+package_name: nginx
 
-# Desired state of the package (present/absent)
-package_state: "present"
+# Desired state of the package (present, absent, latest)
+package_state: present
 
-# Update package cache before installing (applies to apt-based systems)
-package_cache_update: true
+# Update package cache before installing (recommended for fresh environments)
+package_update_cache: true
 
-# Allow package downgrades (yum/dnf only)
-package_allow_downgrade: false
-
-# Allow package erasing via package install (yum/dnf only)
-package_allow_erasing: false
+# Cache update timeout in seconds
+package_cache_timeout: 3600
