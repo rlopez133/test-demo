@@ -1,43 +1,62 @@
 # ACME Package Setup Collection
 
-This Ansible collection provides automation for package installation and service management.
+A production-ready Ansible collection for managing package installation and service lifecycle.
 
-## Features
+## Overview
 
-- Install or remove packages using the system package manager
-- Manage service state (started, stopped, enabled, disabled)
-- Idempotent operations with proper state management
-- Support for handlers to restart services on configuration changes
-
-## Requirements
-
-- Ansible Core >= 2.15.0
-- Target systems: Linux (RHEL, Ubuntu, Debian, etc.)
+This collection provides automated provisioning of system packages and service management, including installation, service startup, and configuration management.
 
 ## Included Roles
 
-### install_package
+### package_installer
 
-Installs or removes packages on target systems using the native package manager.
-
-**Variables:**
-- `package_name`: Name of the package to install/remove (default: 'nginx')
-- `package_state`: State of the package - present or absent (default: 'present')
-
-### manage_service
-
-Manages service state and enables/disables services on startup.
+Responsible for installing system packages and managing their lifecycle.
 
 **Variables:**
-- `service_name`: Name of the service to manage (default: 'nginx')
-- `service_state`: Desired state - started, stopped, restarted, reloaded (default: 'started')
-- `service_enabled`: Enable service on boot (default: true)
+- `package_name`: Name of the package to install (default: nginx)
+- `package_state`: Desired state of the package - present/absent (default: present)
+- `package_manager`: Auto-detected or explicitly set (apt, yum, dnf, zypper)
 
-## Quick Start
+### service_manager
+
+Responsible for managing service state and lifecycle (start, stop, restart, reload).
+
+**Variables:**
+- `service_name`: Name of the service to manage (default: nginx)
+- `service_state`: Desired service state - started/stopped/restarted/reloaded (default: started)
+- `service_enabled`: Whether service should auto-start on boot (default: true)
+
+## Usage
+
+Basic usage to install nginx and start the service:
+
+```yaml
+- name: Setup nginx
+  ansible.builtin.include_role:
+    name: acme.package_setup.package_installer
+  vars:
+    package_name: nginx
+    package_state: present
+
+- name: Start nginx service
+  ansible.builtin.include_role:
+    name: acme.package_setup.service_manager
+  vars:
+    service_name: nginx
+    service_state: started
+```
+
+Or use the site.yml playbook:
 
 ```bash
-ansible-playbook acme.package_setup.site -e "package_name=nginx package_state=present service_name=nginx service_state=started"
+ansible-playbook -i inventory acme.package_setup.site
 ```
+
+## Requirements
+
+- Ansible >= 2.15.0
+- ansible.posix >= 1.1.0
+- Target systems: Linux (RHEL, CentOS, Debian, Ubuntu, SUSE)
 
 ## License
 

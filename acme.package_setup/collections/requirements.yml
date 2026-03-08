@@ -1,5 +1,6 @@
 ---
-# Collection dependencies for ACME Package Setup
-# This collection uses only Ansible built-in modules and does not require external collections
-
-collections: []
+collections:
+  - name: ansible.posix
+    version: ">=1.1.0"
+  - name: community.general
+    version: ">=5.0.0"
