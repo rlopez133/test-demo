@@ -1,42 +1,34 @@
 ---
-# Main Playbook: Nginx Setup
-# This playbook orchestrates the installation and startup of nginx
-# It includes roles for package management and service lifecycle
-
-- name: Setup and start nginx
+- name: Main playbook for package setup and service management
   hosts: all
-  become: true
   gather_facts: true
+  tags:
+    - always
 
   pre_tasks:
-    - name: Validate supported operating system
-      ansible.builtin.assert:
-        that:
-          - ansible_os_family in ['Debian', 'RedHat']
-        fail_msg: "This collection supports Debian and RedHat family systems only"
+    - name: Display target system information
+      ansible.builtin.debug:
+        msg: |
+          Target: {{ inventory_hostname }}
+          OS Family: {{ ansible_os_family }}
+          Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}
       tags:
         - always
 
   roles:
-    - role: acme.package_setup.nginx_package
-      tags: [package-management, nginx]
+    - name: Install packages
+      role: package_installer
+      tags:
+        - packages
 
-    - role: acme.package_setup.nginx_service
-      tags: [service-management, nginx]
+    - name: Manage services
+      role: service_manager
+      tags:
+        - services
 
   post_tasks:
-    - name: Verify nginx installation
-      ansible.builtin.command:
-        cmd: nginx -v
-      changed_when: false
-      register: nginx_version
-      tags:
-        - always
-        - verify
-
-    - name: Display nginx version
+    - name: Display completion message
       ansible.builtin.debug:
-        msg: "{{ nginx_version.stderr }}"
+        msg: "Package setup and service management completed successfully"
       tags:
         - always
-        - verify

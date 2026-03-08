@@ -1,22 +1,48 @@
 ---
-- name: Install package on target system
+- name: Update package cache (Debian-based systems)
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  when:
+    - ansible_os_family == "Debian"
+    - update_package_cache | bool
   tags:
-    - packages
-    - install
-  block:
-    - name: Install package using ansible.builtin.package module
-      ansible.builtin.package:
-        name: "{{ package_name }}"
-        state: "{{ package_state }}"
-      register: package_install_result
+    - package
+    - package-installer
 
-    - name: Log package installation result
-      ansible.builtin.debug:
-        msg: "Package {{ package_name }} {{ package_state }} - Changed: {{ package_install_result.changed }}"
-      tags:
-        - debug
+- name: Update package cache (RedHat-based systems)
+  ansible.builtin.yum:
+    update_cache: true
+  when:
+    - ansible_os_family == "RedHat"
+    - update_package_cache | bool
+  tags:
+    - package
+    - package-installer
 
-  rescue:
-    - name: Handle package installation failure
-      ansible.builtin.fail:
-        msg: "Failed to {{ package_state }} package {{ package_name }}. Please check package manager and package name."
+- name: Install package on Debian-based systems
+  ansible.builtin.apt:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  when: ansible_os_family == "Debian"
+  register: apt_install_result
+  tags:
+    - package
+    - package-installer
+
+- name: Install package on RedHat-based systems
+  ansible.builtin.yum:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  when: ansible_os_family == "RedHat"
+  register: yum_install_result
+  tags:
+    - package
+    - package-installer
+
+- name: Display installation result
+  ansible.builtin.debug:
+    msg: "Package {{ package_name }} installation completed with state {{ package_state }}"
+  tags:
+    - package
+    - package-installer

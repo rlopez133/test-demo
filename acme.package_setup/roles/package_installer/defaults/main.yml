@@ -1,6 +1,9 @@
 ---
-# Package to install
-package_name: ""
+# Package name to install
+package_name: nginx
 
-# Package state: present/absent
+# Desired state of the package (present, absent, latest)
 package_state: present
+
+# Update package cache before installation
+update_package_cache: false

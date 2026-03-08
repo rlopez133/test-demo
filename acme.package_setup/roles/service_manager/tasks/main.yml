@@ -1,32 +1,37 @@
 ---
-- name: Manage service state and enablement
+- name: Ensure systemd service is in desired state
+  ansible.builtin.systemd_service:
+    name: "{{ service_name }}"
+    state: "{{ service_state }}"
+    enabled: "{{ service_enabled }}"
+    daemon_reload: true
+  register: service_result
   tags:
-    - services
-    - service-management
-  block:
-    - name: Ensure service is in desired state
-      ansible.builtin.service:
-        name: "{{ service_name }}"
-        state: "{{ service_action }}"
-        enabled: "{{ service_enabled }}"
-      register: service_action_result
+    - service
+    - service-manager
 
-    - name: Log service action result
-      ansible.builtin.debug:
-        msg: "Service {{ service_name }} action {{ service_action }} - Changed: {{ service_action_result.changed }}"
-      tags:
-        - debug
+- name: Display service status
+  ansible.builtin.debug:
+    msg: "Service {{ service_name }} state is {{ service_state }} and enabled: {{ service_enabled }}"
+  tags:
+    - service
+    - service-manager
 
-    - name: Verify service is running
-      ansible.builtin.service:
-        name: "{{ service_name }}"
-        state: started
-      when:
-        - service_action in ['started', 'restarted', 'reloaded']
-      tags:
-        - verify
+- name: Verify service is running (when state is started)
+  ansible.builtin.systemd_service:
+    name: "{{ service_name }}"
+  register: service_status
+  when: service_state == "started"
+  tags:
+    - service
+    - service-manager
 
-  rescue:
-    - name: Handle service management failure
-      ansible.builtin.fail:
-        msg: "Failed to manage service {{ service_name }}. Ensure the service exists and is available."
+- name: Display service verification result
+  ansible.builtin.debug:
+    msg: "Service {{ service_name }} is active: {{ service_status.status.ActiveState | default('unknown') }}"
+  when:
+    - service_state == "started"
+    - service_status is defined
+  tags:
+    - service
+    - service-manager
