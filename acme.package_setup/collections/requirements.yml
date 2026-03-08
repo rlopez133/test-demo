@@ -1,4 +1,6 @@
 ---
-# External collection dependencies
-# This collection uses only ansible.builtin modules and requires no external collections
+# External Collection Dependencies
+# This file lists any Ansible Galaxy collections required by this collection.
+# All roles use only ansible.builtin modules, so no external collections are required.
+
 collections: []

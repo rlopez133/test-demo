@@ -1,10 +1,12 @@
 ---
-- name: Ensure Nginx service is in desired state
-  become: true
+# Nginx Service Management Tasks
+# This role ensures nginx service is in the desired state
+
+- name: Ensure nginx service is in desired state
   ansible.builtin.service:
     name: "{{ nginx_service_name }}"
     state: "{{ nginx_service_state }}"
     enabled: "{{ nginx_service_enabled }}"
   tags:
-    - service_manage
-    - nginx
+    - service-management
+    - nginx-service

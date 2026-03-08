@@ -1,12 +1,29 @@
 galaxy_info:
   author: Ansible Automation
-  description: Role for installing nginx package
+  description: Install and manage nginx package
   company: ACME
-  license: Apache-2.0
-  min_ansible_version: "2.15.0"
-  galaxy_tags:
-    - package
+  license: GPL-3.0-or-later
+  min_ansible_version: '2.15.0'
+  platforms:
+    - name: Ubuntu
+      versions:
+        - '20.04'
+        - '22.04'
+    - name: Debian
+      versions:
+        - '10'
+        - '11'
+    - name: CentOS
+      versions:
+        - '8'
+        - '9'
+    - name: RHEL
+      versions:
+        - '8'
+        - '9'
+  tags:
+    - package-management
+    - webserver
     - nginx
-    - installation
 
 dependencies: []

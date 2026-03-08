@@ -1,17 +1,42 @@
 ---
-- name: Complete Nginx setup workflow
+# Main Playbook: Nginx Setup
+# This playbook orchestrates the installation and startup of nginx
+# It includes roles for package management and service lifecycle
+
+- name: Setup and start nginx
   hosts: all
+  become: true
   gather_facts: true
-  vars:
-    nginx_package_name: nginx
-    nginx_package_state: present
-    nginx_service_name: nginx
-    nginx_service_state: started
-    nginx_service_enabled: true
+
+  pre_tasks:
+    - name: Validate supported operating system
+      ansible.builtin.assert:
+        that:
+          - ansible_os_family in ['Debian', 'RedHat']
+        fail_msg: "This collection supports Debian and RedHat family systems only"
+      tags:
+        - always
+
   roles:
-    - role: acme.package_setup.nginx_install
-      tags:
-        - nginx_install
+    - role: acme.package_setup.nginx_package
+      tags: [package-management, nginx]
+
     - role: acme.package_setup.nginx_service
+      tags: [service-management, nginx]
+
+  post_tasks:
+    - name: Verify nginx installation
+      ansible.builtin.command:
+        cmd: nginx -v
+      changed_when: false
+      register: nginx_version
       tags:
-        - nginx_service
+        - always
+        - verify
+
+    - name: Display nginx version
+      ansible.builtin.debug:
+        msg: "{{ nginx_version.stderr }}"
+      tags:
+        - always
+        - verify
