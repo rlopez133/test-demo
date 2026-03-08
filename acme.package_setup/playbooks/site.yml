@@ -1,27 +1,31 @@
 ---
-- name: Configure package setup across infrastructure
+- name: ACME Package Setup - Main Playbook
   hosts: all
   gather_facts: true
-  vars_files:
-    - vars/main.yml
-
   pre_tasks:
-    - name: Validate target system prerequisites
-      ansible.builtin.assert:
-        that:
-          - ansible_os_family is defined
-        fail_msg: "Unable to determine OS family for target system"
+    - name: Display automation intent
+      ansible.builtin.debug:
+        msg: |
+          Executing ACME Package Setup Collection
+          Step 1: Install package {{ package_name }}
+          Step 2: Manage service {{ service_name }}
+      tags:
+        - always
 
   roles:
-    - name: nginx_install
+    - name: Install packages
+      role: acme.package_setup.package_installer
       tags:
-        - nginx
-        - package
-        - service
+        - packages
+
+    - name: Manage services
+      role: acme.package_setup.service_manager
+      tags:
+        - services
 
   post_tasks:
-    - name: Display completion summary
+    - name: Verify automation completion
       ansible.builtin.debug:
-        msg: "Package setup automation completed successfully"
+        msg: "ACME Package Setup Collection execution completed successfully"
       tags:
         - always

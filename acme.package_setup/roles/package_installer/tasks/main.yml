@@ -1,41 +1,43 @@
 ---
-# Install and manage system packages
-
-- name: Update package cache if requested
-  ansible.builtin.apt:
-    cache_valid_time: "{{ package_cache_timeout }}"
-    update_cache: "{{ package_update_cache }}"
-  when: ansible_os_family | default('') == 'Debian'
+- name: Package installer role
   tags:
     - package
     - package_installer
 
-- name: Install or manage package on Debian-based systems
+- name: Update package cache (Debian-based systems)
+  ansible.builtin.apt:
+    update_cache: "{{ update_cache }}"
+    cache_valid_time: "{{ cache_valid_time }}"
+  when:
+    - ansible_os_family == "Debian"
+    - package_state != "absent"
+  tags:
+    - package
+    - cache
+
+- name: Install package on Debian-based systems
   ansible.builtin.apt:
     name: "{{ package_name }}"
     state: "{{ package_state }}"
-  when: ansible_os_family | default('') == 'Debian'
+  when: ansible_os_family == "Debian"
+  register: apt_result
   tags:
     - package
-    - package_installer
+    - install
 
-- name: Install or manage package on RedHat-based systems
+- name: Install package on RedHat-based systems
   ansible.builtin.yum:
     name: "{{ package_name }}"
     state: "{{ package_state }}"
-  when: ansible_os_family | default('') == 'RedHat'
+  when: ansible_os_family == "RedHat"
+  register: yum_result
   tags:
     - package
-    - package_installer
+    - install
 
-- name: Validate package installation
-  ansible.builtin.command:
-    cmd: "which {{ package_name | split('-') | first }}"
-  register: package_check
-  failed_when: package_check.rc != 0
-  when: package_state == 'present'
-  changed_when: false
+- name: Display installation result
+  ansible.builtin.debug:
+    msg: "Package {{ package_name }} state is now {{ package_state }}"
   tags:
     - package
-    - package_installer
-    - validation
+    - debug

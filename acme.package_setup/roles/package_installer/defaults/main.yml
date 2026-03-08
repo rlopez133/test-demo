@@ -1,14 +1,15 @@
 ---
-# Package installer role default variables
+# Package installer role defaults
+# These variables control package installation behavior
 
-# Name of the package to install
+# Package name to install
 package_name: nginx
 
-# Desired state of the package (present, absent, latest)
+# Package state: 'present' to install, 'absent' to remove, 'latest' for latest version
 package_state: present
 
-# Update package cache before installing (recommended for fresh environments)
-package_update_cache: true
+# Whether to update package cache before installing (only relevant for apt)
+update_cache: true
 
-# Cache update timeout in seconds
-package_cache_timeout: 3600
+# Cache valid time in seconds (only relevant for apt)
+cache_valid_time: 3600
