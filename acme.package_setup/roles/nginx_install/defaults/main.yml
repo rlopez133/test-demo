@@ -1,9 +1,18 @@
 ---
-# Package management variables for Nginx installation
+# Package management variables
+# All values are user-overridable via group_vars, host_vars, or extra_vars
 
-# nginx_package_name: Name of the Nginx package to install
+# Nginx package name (may vary by distribution)
 nginx_package_name: nginx
 
-# nginx_package_state: Desired state of the Nginx package
-# Valid values: present, absent, latest
-nginx_package_state: present
+# Package installation state: present, latest, or absent
+nginx_state: present
+
+# Nginx service name
+nginx_service_name: nginx
+
+# Nginx service state: started, stopped, restarted, reloaded
+nginx_service_state: started
+
+# Nginx service enabled on boot
+nginx_service_enabled: true

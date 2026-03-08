@@ -1,42 +1,27 @@
 ---
-# Main playbook for ACME Package Setup collection
-# Orchestrates package installation and service management
-
-- name: Configure packages and services
+- name: Configure package setup across infrastructure
   hosts: all
   gather_facts: true
-  tags:
-    - always
+  vars_files:
+    - vars/main.yml
 
   pre_tasks:
-    - name: Display target system information
-      ansible.builtin.debug:
-        msg: |
-          Target: {{ inventory_hostname }}
-          OS Family: {{ ansible_os_family }}
-          Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}
-      tags:
-        - debug
+    - name: Validate target system prerequisites
+      ansible.builtin.assert:
+        that:
+          - ansible_os_family is defined
+        fail_msg: "Unable to determine OS family for target system"
 
   roles:
-    - role: package_manager
+    - name: nginx_install
       tags:
-        - packages
-      vars:
-        package_name: '{{ package_name | default("nginx") }}'
-        package_state: '{{ package_state | default("present") }}'
-
-    - role: service_controller
-      tags:
-        - services
-      vars:
-        service_name: '{{ service_name | default("nginx") }}'
-        service_state: '{{ service_state | default("started") }}'
-        service_enabled: '{{ service_enabled | default(true) }}'
+        - nginx
+        - package
+        - service
 
   post_tasks:
-    - name: Verify final system state
+    - name: Display completion summary
       ansible.builtin.debug:
-        msg: 'Package and service configuration complete on {{ inventory_hostname }}'
+        msg: "Package setup automation completed successfully"
       tags:
-        - debug
+        - always
