@@ -1,0 +1,20 @@
+---
+- name: Deploy and Configure Nginx
+  hosts: webservers
+  gather_facts: true
+  vars:
+    package_name: nginx
+    package_state: present
+    service_name: nginx
+    service_state: started
+    service_enabled: true
+  roles:
+    - acme.package_setup.package_installer
+    - acme.package_setup.service_manager
+  post_tasks:
+    - name: Verify nginx is running
+      ansible.builtin.uri:
+        url: http://localhost
+        status_code: 200
+      retries: 3
+      delay: 2

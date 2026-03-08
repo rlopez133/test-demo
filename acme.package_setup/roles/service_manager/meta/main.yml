@@ -1,19 +1,20 @@
+---
 galaxy_info:
+  role_name: service_manager
   author: Ansible Automation
-  description: Manages systemd service lifecycle operations
-  license:
-    - GPL-3.0-or-later
+  description: Manage system service states and startup configuration
+  license: GPL-3.0-or-later
   min_ansible_version: 2.15.0
   platforms:
-    - name: Ubuntu
-      versions:
-        - focal
-        - jammy
     - name: EL
       versions:
-        - 8
-        - 9
+        - "8"
+        - "9"
+    - name: Ubuntu
+      versions:
+        - "20.04"
+        - "22.04"
   tags:
     - service
-    - management
+    - system
 dependencies: []

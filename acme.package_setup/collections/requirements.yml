@@ -1,4 +1,4 @@
 ---
-# External collection dependencies
-# This collection uses only Ansible built-in modules and requires no external collections
-collections: []
+collections:
+  - name: ansible.posix
+    version: ">=1.1.0"

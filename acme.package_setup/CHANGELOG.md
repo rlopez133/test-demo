@@ -1,14 +1,9 @@
-# ACME Package Setup Collection - Changelog
+# Changelog
 
-## [1.0.0] - 2024
+## [1.0.0] - 2024-01-01
 
 ### Added
-- Initial release of package_setup collection
-- package_installer role for cross-platform package management
-- service_manager role for systemd service lifecycle operations
-- site.yml orchestration playbook
-- Comprehensive documentation and examples
-- Support for Debian/Ubuntu and RedHat/CentOS systems
-- Task validation and error handling
-- Full FQCN compliance for all modules
-- Idempotent task design
+- Initial release of acme.package_setup collection
+- package_installer role for multi-platform package management
+- service_manager role for systemd service management
+- Support for Debian and RedHat-based distributions
