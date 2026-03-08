@@ -1,4 +1,6 @@
 ---
-# External collection dependencies
-# All dependencies are from Ansible builtin collections
-collections: []
+# External collection dependencies for ACME Package Setup collection
+# All required collections are listed here with their minimum versions
+
+collections:
+  # No external collections required - all modules are from ansible.builtin
