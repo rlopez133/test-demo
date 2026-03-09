@@ -1,9 +1,22 @@
 ---
-# Package configuration
-nginx_package_name: nginx
-nginx_package_state: present
+# Package Configuration
+ngix_package_name: nginx
+ngix_package_state: present
 
-# Service configuration
-nginx_service_name: nginx
-nginx_service_state: started
-nginx_service_enabled: true
+# Service Configuration
+ngix_service_name: nginx
+ngix_service_state: started
+ngix_service_enabled: true
+ngix_service_port: 80
+
+# nginx Configuration Tuning
+ngix_worker_processes: auto
+ngix_worker_connections: 768
+ngix_keepalive_timeout: 65
+ngix_client_max_body_size: 20m
+
+# Tags for selective execution
+ngix_tags:
+  - nginx
+  - package
+  - service

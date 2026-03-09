@@ -1,2 +1,4 @@
 ---
-collections: []
+collections:
+  - name: ansible.builtin
+    version: '>=2.15.0'
