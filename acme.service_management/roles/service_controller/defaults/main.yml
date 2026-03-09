@@ -1,9 +1,0 @@
----
-# Name of the service to manage (e.g., nginx, apache2, httpd)
-service_name: nginx
-
-# Desired service state: started or stopped
-service_state: started
-
-# Whether service should start on system boot
-service_enabled: true
