@@ -1,46 +1,57 @@
 # Package Installer Role
 
-This role installs and manages system packages using the native package manager of the target system.
+This role handles the installation, upgrade, and removal of system packages across different Linux distributions.
 
-## Purpose
+## Role Variables
 
-The package_installer role abstracts package management across different operating systems (RedHat, Debian, etc.) by using the `ansible.builtin.package` module, which automatically selects the correct package manager.
+### package_installer_packages
+List of packages to manage. Each package must have a `name` and `state` field.
 
-## Variables
+**Default:** `[]`
 
-### Required
+**Example:**
+```yaml
+package_installer_packages:
+  - name: nginx
+    state: present
+  - name: old-package
+    state: absent
+  - name: curl
+    state: latest
+```
 
-None. All variables have sensible defaults.
+### package_installer_update_cache
+Whether to update the package cache before installing packages (Debian-based systems only).
 
-### Optional
+**Default:** `false`
 
-- `package_name` (string): Name of the package to manage. Default: `nginx`
-- `package_state` (string): Desired package state (`present`, `absent`). Default: `present`
+### package_installer_cache_valid_time
+Package cache validity time in seconds (Debian-based systems only).
 
-## Example Usage
+**Default:** `3600`
+
+## Supported Platforms
+
+- RHEL/CentOS 8, 9 (dnf)
+- Ubuntu 20.04, 22.04, 24.04 (apt)
+- Debian 11, 12 (apt)
+
+## Example Playbook
 
 ```yaml
-- hosts: webservers
+- name: Install packages
+  hosts: webservers
   roles:
     - role: acme.package_setup.package_installer
       vars:
-        package_name: nginx
-        package_state: present
+        package_installer_update_cache: true
+        package_installer_packages:
+          - name: nginx
+            state: present
+          - name: git
+            state: present
 ```
 
-## Tags
+## License
 
-- `package`: All package-related tasks
-- `install`: Package installation tasks
-- `info`: Information gathering tasks
-- `error`: Error handling tasks
-
-## Requirements
-
-- Ansible >= 2.15.0
-- Target system with a supported package manager (apt, yum, dnf, etc.)
-- Become/sudo privileges on target system
-
-## Idempotency
-
-This role is fully idempotent. Running it multiple times with the same variables will produce the same result without making unnecessary changes.
+GPL-3.0-or-later

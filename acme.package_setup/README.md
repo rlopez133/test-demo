@@ -1,54 +1,40 @@
-# Acme Package Setup Collection
+# ACME Package Setup Collection
 
-This Ansible collection provides roles for installing and managing system packages and services.
+This Ansible collection provides roles for managing package installation and service lifecycle management.
 
-## Features
+## Roles
 
-- **nginx_install**: Install and configure nginx package
-- **nginx_service**: Manage nginx service (start, stop, enable, disable)
+### package_installer
+Installs and manages system packages using the appropriate package manager for the target system.
+
+### service_manager
+Manages service state (started, stopped, enabled, disabled) for system services.
 
 ## Requirements
 
-- Ansible 2.15.0 or later
-- Target systems: Linux (Debian/Ubuntu, RHEL/CentOS)
-
-## Installation
-
-```bash
-ansible-galaxy collection install acme.package_setup
-```
+- Ansible Core >= 2.15.0
+- Target systems must have appropriate package managers installed (apt, dnf, etc.)
 
 ## Usage
 
-Include the collection roles in your playbooks:
+Include this collection in your playbooks:
 
 ```yaml
----
-- hosts: all
-  gather_facts: yes
+- name: Setup packages and services
+  hosts: all
   roles:
-    - acme.package_setup.nginx_install
-    - acme.package_setup.nginx_service
+    - role: acme.package_setup.package_installer
+      vars:
+        package_installer_packages:
+          - name: nginx
+            state: present
+    - role: acme.package_setup.service_manager
+      vars:
+        service_manager_services:
+          - name: nginx
+            state: started
+            enabled: true
 ```
-
-Or use the provided site.yml playbook:
-
-```bash
-ansible-playbook playbooks/site.yml
-```
-
-## Role Variables
-
-### nginx_install
-
-- `nginx_package_name` (default: `nginx`): Name of the nginx package to install
-- `nginx_package_state` (default: `present`): Package state (present/absent/latest)
-
-### nginx_service
-
-- `nginx_service_name` (default: `nginx`): Name of the nginx service
-- `nginx_service_state` (default: `started`): Service state (started/stopped/restarted/reloaded)
-- `nginx_service_enabled` (default: `yes`): Whether to enable nginx on boot
 
 ## License
 

@@ -1,35 +1,37 @@
 ---
-- name: Package installer role
-  block:
-    - name: Gather package facts
-      ansible.builtin.package_facts:
-        manager: auto
-      tags:
-        - package
-        - info
+- name: Update package cache on Debian-based systems
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ package_installer_cache_valid_time }}"
+  when:
+    - ansible_os_family == 'Debian'
+    - package_installer_update_cache | bool
+  tags:
+    - package
+    - package_installer
 
-    - name: Install package "{{ package_name }}"
-      ansible.builtin.package:
-        name: "{{ package_name }}"
-        state: "{{ package_state }}"
-      become: true
-      register: package_install_result
-      tags:
-        - package
-        - install
+- name: Install/manage packages on Debian-based systems
+  ansible.builtin.apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ package_installer_packages }}"
+  when:
+    - ansible_os_family == 'Debian'
+    - package_installer_packages is defined
+    - package_installer_packages | length > 0
+  tags:
+    - package
+    - package_installer
 
-    - name: Display package installation result
-      ansible.builtin.debug:
-        msg: "Package {{ package_name }} {{ package_state }} operation completed"
-        verbosity: 1
-      tags:
-        - package
-        - info
-
-  rescue:
-    - name: Handle package installation failure
-      ansible.builtin.debug:
-        msg: "Failed to {{ package_state }} package {{ package_name }}: {{ ansible_failed_result.msg }}"
-      tags:
-        - package
-        - error
+- name: Install/manage packages on RedHat-based systems
+  ansible.builtin.dnf:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ package_installer_packages }}"
+  when:
+    - ansible_os_family == 'RedHat'
+    - package_installer_packages is defined
+    - package_installer_packages | length > 0
+  tags:
+    - package
+    - package_installer

@@ -1,4 +1,1 @@
-requires_ansible: ">=2.15.0"
-actions:
-  acme.package_setup.nginx_install:
-  acme.package_setup.nginx_service:
+requires_ansible: '>=2.15.0'

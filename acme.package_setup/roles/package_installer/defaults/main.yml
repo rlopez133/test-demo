@@ -1,9 +1,13 @@
 ---
-# Package installer default variables
-# These variables control which packages are installed and their desired state
+# Package installer defaults
 
-# Name of the package to install
-package_name: nginx
+# List of packages to install/remove
+# Each package should have a 'name' and 'state' field
+# state can be: present, absent, latest
+package_installer_packages: []
 
-# Desired state of the package: 'present' to install, 'absent' to remove
-package_state: present
+# Update package cache before installing (apt-based systems)
+package_installer_update_cache: false
+
+# Update package cache validity time in seconds (apt-based systems)
+package_installer_cache_valid_time: 3600
