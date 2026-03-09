@@ -1,4 +1,4 @@
 ---
-collections:
-  - name: ansible.builtin
-    version: '>=2.15.0'
+# External collection dependencies
+# This collection uses only Ansible builtin modules and does not require additional collections
+collections: []

@@ -1,31 +1,30 @@
 ---
-# Tasks for installing system packages
-
-- name: Update apt cache on Debian-based systems
-  ansible.builtin.apt:
-    cache_valid_time: "{{ cache_valid_time }}"
-    update_cache: "{{ update_package_cache }}"
-  when:
-    - ansible_os_family == 'Debian'
-    - update_package_cache | bool
+- name: Install packages
   tags:
     - package
-    - package_install
+    - install
+  block:
+    - name: Install package(s) using native package manager
+      ansible.builtin.package:
+        name: "{{ package_name }}"
+        state: "{{ package_state | default('present') }}"
+      register: package_install_result
+      until: package_install_result is succeeded
+      retries: 3
+      delay: 5
 
-- name: Install packages on Debian-based systems
-  ansible.builtin.apt:
-    name: "{{ packages_to_install }}"
-    state: "{{ package_state }}"
-  when: ansible_os_family == 'Debian'
-  tags:
-    - package
-    - package_install
+    - name: Display package installation result
+      ansible.builtin.debug:
+        msg: "Package '{{ package_name }}' installation state: {{ package_state | default('present') }}"
+        verbosity: 1
 
-- name: Install packages on RedHat-based systems
-  ansible.builtin.yum:
-    name: "{{ packages_to_install }}"
-    state: "{{ package_state }}"
-  when: ansible_os_family == 'RedHat'
-  tags:
-    - package
-    - package_install
+  rescue:
+    - name: Handle package installation failure
+      ansible.builtin.fail:
+        msg: "Failed to install package '{{ package_name }}'. Error: {{ ansible_failed_result.msg }}"
+
+  always:
+    - name: Log package installation attempt
+      ansible.builtin.debug:
+        msg: "Package installation attempt for '{{ package_name }}' completed"
+        verbosity: 2
