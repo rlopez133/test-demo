@@ -1,20 +1,22 @@
-galaxy_info:
-  author: Ansible Automation
-  description: Role for installing system packages
-  company: Acme Corp
-  license: GPL-3.0-or-later
-  min_ansible_version: '2.15.0'
-  supported_platforms:
-    - name: Ubuntu
-      versions:
-        - all
-    - name: Debian
-      versions:
-        - all
-    - name: CentOS
-      versions:
-        - all
-    - name: RedHat
-      versions:
-        - all
+---
+namespace: acme
+name: package_install
+description: Install and manage system packages
+supports:
+  - name: EL
+    versions:
+      - '8'
+      - '9'
+  - name: Debian
+    versions:
+      - 'bullseye'
+      - 'bookworm'
+  - name: Ubuntu
+    versions:
+      - '20.04'
+      - '22.04'
+      - '24.04'
+galaxy_tags:
+  - package
+  - installation
 dependencies: []

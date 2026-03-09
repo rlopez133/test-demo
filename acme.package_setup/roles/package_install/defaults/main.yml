@@ -1,16 +1,5 @@
 ---
-# Default variables for package installation role
-
-# List of packages to install
-# Default includes nginx as per workflow requirements
-packages_to_install:
-  - nginx
-
-# Package state: present, absent, latest
-package_state: present
-
-# Update package cache before installation (for apt-based systems)
-update_package_cache: true
-
-# Cache validity time in seconds (for apt-based systems)
-cache_valid_time: 3600
+# Package installation defaults
+# package_name: Name of the package to install (required, should be passed as extra vars)
+# package_state: Desired state of the package (present, absent, latest)
+package_state: 'present'

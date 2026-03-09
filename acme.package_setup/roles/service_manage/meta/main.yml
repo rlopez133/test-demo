@@ -1,21 +1,22 @@
-galaxy_info:
-  author: Ansible Automation
-  description: Role for managing system services
-  company: Acme Corp
-  license: GPL-3.0-or-later
-  min_ansible_version: '2.15.0'
-  supported_platforms:
-    - name: Ubuntu
-      versions:
-        - all
-    - name: Debian
-      versions:
-        - all
-    - name: CentOS
-      versions:
-        - all
-    - name: RedHat
-      versions:
-        - all
-dependencies:
-  - role: package_install
+---
+namespace: acme
+name: service_manage
+description: Manage service state and enablement
+supports:
+  - name: EL
+    versions:
+      - '8'
+      - '9'
+  - name: Debian
+    versions:
+      - 'bullseye'
+      - 'bookworm'
+  - name: Ubuntu
+    versions:
+      - '20.04'
+      - '22.04'
+      - '24.04'
+galaxy_tags:
+  - service
+  - management
+dependencies: []
