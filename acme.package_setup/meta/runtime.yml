@@ -1,9 +1,3 @@
-requires_ansible: '>=2.15.0'
-actions:
-  acme.package_setup.package_install: {}
-  acme.package_setup.service_manage: {}
-modules:
-  - name: Package installation module
-    description: Installs system packages
-  - name: Service management module
-    description: Manages system services (start, stop, restart, enable, disable)
+---
+# Minimum ansible-core version required to use this collection
+requires_ansible: ">=2.15.0"

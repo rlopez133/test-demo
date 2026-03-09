@@ -1,0 +1,27 @@
+---
+# meta/main.yml - Role metadata for the nginx role
+galaxy_info:
+  role_name: nginx
+  author: acme
+  description: Installs the nginx package and manages the nginx service
+  license: GPL-2.0-or-later
+  min_ansible_version: "2.15"
+  platforms:
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+  galaxy_tags:
+    - nginx
+    - package
+    - service
+    - webserver
+dependencies: []

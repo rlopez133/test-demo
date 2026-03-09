@@ -1,0 +1,18 @@
+---
+# handlers/main.yml - Handlers for the nginx role
+# These handlers are notified by tasks when configuration changes require
+# a service restart or reload.
+
+- name: "Handler | Restart nginx service"
+  ansible.builtin.service:
+    name: "{{ nginx_service_name }}"
+    state: restarted
+  become: true
+  listen: "restart nginx"
+
+- name: "Handler | Reload nginx service"
+  ansible.builtin.service:
+    name: "{{ nginx_service_name }}"
+    state: reloaded
+  become: true
+  listen: "reload nginx"

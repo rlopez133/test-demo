@@ -1,0 +1,24 @@
+---
+# tasks/main.yml - Main tasks for the nginx role
+# Responsibility: Install the nginx package and manage the nginx service
+
+- name: "Package | Ensure nginx package is installed"
+  ansible.builtin.package:
+    name: "{{ nginx_package_name }}"
+    state: "{{ nginx_package_state }}"
+  become: true
+  tags:
+    - package
+    - nginx
+    - install
+
+- name: "Service | Ensure nginx service is started and enabled"
+  ansible.builtin.service:
+    name: "{{ nginx_service_name }}"
+    state: "{{ nginx_service_state }}"
+    enabled: "{{ nginx_service_enabled }}"
+  become: true
+  tags:
+    - service
+    - nginx
+    - start
