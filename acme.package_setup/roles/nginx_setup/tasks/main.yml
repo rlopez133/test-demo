@@ -1,26 +1,43 @@
 ---
-- name: Nginx Setup - Install and Manage Service
-  block:
-    - name: Install nginx package
-      ansible.builtin.package:
-        name: "{{ nginx_package_name }}"
-        state: "{{ nginx_package_state }}"
-      register: nginx_package_result
-      tags:
-        - nginx
-        - packages
+- name: nginx_setup | Install nginx package
+  ansible.builtin.package:
+    name: "{{ ngix_package_name }}"
+    state: "{{ ngix_package_state }}"
+  tags:
+    - nginx
+    - package
+    - install
+  register: nginx_install_result
 
-    - name: Ensure nginx service is {{ nginx_service_state }}
-      ansible.builtin.service:
-        name: "{{ nginx_service_name }}"
-        state: "{{ nginx_service_state }}"
-        enabled: "{{ nginx_service_enabled }}"
-      tags:
-        - nginx
-        - services
-      when: nginx_package_state == 'present'
+- name: nginx_setup | Ensure nginx service is in desired state
+  ansible.builtin.service:
+    name: "{{ ngix_service_name }}"
+    state: "{{ ngix_service_state }}"
+    enabled: "{{ ngix_service_enabled }}"
+  tags:
+    - nginx
+    - service
+    - manage
+  when: ngix_package_state == 'present'
 
-  rescue:
-    - name: Display error message
-      ansible.builtin.debug:
-        msg: "Failed to complete nginx setup: {{ ansible_failed_result.msg }}"
+- name: nginx_setup | Validate nginx configuration syntax
+  ansible.builtin.command:
+    cmd: "{{ ngix_service_name }} -t"
+  changed_when: false
+  tags:
+    - nginx
+    - validate
+    - config
+  when: ngix_package_state == 'present'
+
+- name: nginx_setup | Display package installation result
+  ansible.builtin.debug:
+    msg: |
+      Package: {{ ngix_package_name }}
+      State: {{ ngix_package_state }}
+      Service: {{ ngix_service_name }}
+      Service State: {{ ngix_service_state }}
+      Service Enabled: {{ ngix_service_enabled }}
+  tags:
+    - nginx
+    - debug

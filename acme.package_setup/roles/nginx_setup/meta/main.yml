@@ -1,20 +1,38 @@
 ---
-namespace: acme
-name: nginx_setup
-role_name: nginx_setup
-description: Install and manage nginx package and service
-keywords:
-  - nginx
-  - package
-  - service
-supported_platforms:
-  - name: EL
-    versions:
-      - all
-  - name: Ubuntu
-    versions:
-      - all
-  - name: Debian
-    versions:
-      - all
-min_ansible_version: '2.15.0'
+galaxy_info:
+  author: 'Ansible Automation'
+  description: 'Role for installing and managing nginx web server'
+  company: 'ACME'
+  license: GPL-3.0-or-later
+  min_ansible_version: 2.15.0
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: EL
+      versions:
+        - '7'
+        - '8'
+        - '9'
+    - name: AlmaLinux
+      versions:
+        - '8'
+        - '9'
+    - name: Rocky
+      versions:
+        - '8'
+        - '9'
+  galaxy_tags:
+    - web
+    - webserver
+    - nginx
+    - package
+    - service
+
+dependencies: []

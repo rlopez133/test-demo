@@ -1,1 +1,11 @@
+---
 requires_ansible: '>=2.15.0'
+actions:
+  acme.package_setup.nginx_setup: {}
+plugin_routing:
+  modules:
+    ansible.builtin.apt: {}
+    ansible.builtin.yum: {}
+    ansible.builtin.dnf: {}
+    ansible.builtin.service: {}
+    ansible.builtin.systemd: {}
