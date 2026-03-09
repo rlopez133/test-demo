@@ -1,31 +1,21 @@
 ---
-- name: ACME Package Setup Site Playbook
+- name: Configure nginx package and service
   hosts: all
-  gather_facts: true
-  collections:
-    - acme.package_setup
-  
-  pre_tasks:
-    - name: Display playbook start message
-      ansible.builtin.debug:
-        msg: "Starting ACME package setup automation"
-        verbosity: 1
-  
+  gather_facts: yes
+  tags:
+    - nginx
+    - package
+    - service
+
   roles:
-    - role: package_installer
-      name: "Install and manage packages"
+    - name: Install nginx package
+      role: acme.package_setup.nginx_install
       tags:
-        - packages
-        - core
-    
-    - role: service_manager
-      name: "Manage service lifecycle"
+        - nginx_install
+        - package
+
+    - name: Manage nginx service
+      role: acme.package_setup.nginx_service
       tags:
-        - services
-        - core
-  
-  post_tasks:
-    - name: Display playbook completion message
-      ansible.builtin.debug:
-        msg: "ACME package setup automation completed successfully"
-        verbosity: 1
+        - nginx_service
+        - service

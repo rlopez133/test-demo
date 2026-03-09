@@ -1,29 +1,27 @@
+---
 galaxy_info:
   author: Ansible Automation
-  description: Manage nginx service lifecycle
-  company: ACME
+  description: Role for managing nginx service
+  company: Acme
   license: GPL-3.0-or-later
-  min_ansible_version: '2.15.0'
+  min_ansible_version: 2.15.0
   platforms:
     - name: Ubuntu
       versions:
-        - '20.04'
-        - '22.04'
+        - focal
+        - jammy
     - name: Debian
       versions:
-        - '10'
-        - '11'
-    - name: CentOS
-      versions:
-        - '8'
-        - '9'
-    - name: RHEL
+        - bullseye
+        - bookworm
+    - name: EL
       versions:
         - '8'
         - '9'
   tags:
-    - service-management
-    - webserver
+    - service
     - nginx
+    - webserver
 
-dependencies: []
+dependencies:
+  - acme.package_setup.nginx_install

@@ -1,7 +1,4 @@
 ---
-# External collection dependencies
-# All dependencies here are non-builtin collections required by this collection
-# No external collections are required for this collection as all modules used
-# are part of ansible.builtin
-
+# External collection dependencies for acme.package_setup
+# All tasks use ansible.builtin modules, so no external collections are required.
 collections: []

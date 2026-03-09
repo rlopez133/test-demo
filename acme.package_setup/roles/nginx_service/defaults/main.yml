@@ -1,12 +1,11 @@
 ---
-# Nginx Service Management Defaults
-# This role manages the nginx service state and boot enablement
+# Nginx service management defaults
 
-# Service name
+# Service name for nginx
 nginx_service_name: nginx
 
-# Service state: started, stopped, restarted, reloaded
+# Desired state of the nginx service (started/stopped/restarted/reloaded)
 nginx_service_state: started
 
-# Enable service on boot
-nginx_service_enabled: true
+# Whether to enable nginx on system boot
+nginx_service_enabled: yes

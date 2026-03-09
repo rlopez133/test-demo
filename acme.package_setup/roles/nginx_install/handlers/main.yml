@@ -3,16 +3,4 @@
   ansible.builtin.service:
     name: "{{ nginx_service_name }}"
     state: restarted
-  listen: Restart nginx service
-  tags:
-    - service
-    - restart
-
-- name: Reload nginx service
-  ansible.builtin.service:
-    name: "{{ nginx_service_name }}"
-    state: reloaded
-  listen: Reload nginx service
-  tags:
-    - service
-    - reload
+  listen: restart nginx

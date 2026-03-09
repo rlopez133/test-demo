@@ -1,45 +1,55 @@
-# ACME Package Setup Collection
+# Acme Package Setup Collection
 
-This collection provides roles for installing packages and managing their associated services with proper lifecycle control.
+This Ansible collection provides roles for installing and managing system packages and services.
 
-## Roles
+## Features
 
-### package_installer
-
-Installs and manages system packages using native package managers.
-
-**Variables:**
-- `package_name`: Name of the package to install (default: nginx)
-- `package_state`: Package state (present/absent) (default: present)
-
-### service_manager
-
-Manages service lifecycle (start, stop, enable, disable).
-
-**Variables:**
-- `service_name`: Name of the service to manage (default: nginx)
-- `service_action`: Service action (started/stopped/restarted/reloaded) (default: started)
-- `service_enabled`: Whether service should start on boot (default: true)
-
-## Example Playbook
-
-```yaml
-- hosts: all
-  collections:
-    - acme.package_setup
-  roles:
-    - role: package_installer
-      vars:
-        package_name: nginx
-        package_state: present
-    - role: service_manager
-      vars:
-        service_name: nginx
-        service_action: started
-        service_enabled: true
-```
+- **nginx_install**: Install and configure nginx package
+- **nginx_service**: Manage nginx service (start, stop, enable, disable)
 
 ## Requirements
 
-- Ansible >= 2.15.0
-- Target systems with systemd or other service managers
+- Ansible 2.15.0 or later
+- Target systems: Linux (Debian/Ubuntu, RHEL/CentOS)
+
+## Installation
+
+```bash
+ansible-galaxy collection install acme.package_setup
+```
+
+## Usage
+
+Include the collection roles in your playbooks:
+
+```yaml
+---
+- hosts: all
+  gather_facts: yes
+  roles:
+    - acme.package_setup.nginx_install
+    - acme.package_setup.nginx_service
+```
+
+Or use the provided site.yml playbook:
+
+```bash
+ansible-playbook playbooks/site.yml
+```
+
+## Role Variables
+
+### nginx_install
+
+- `nginx_package_name` (default: `nginx`): Name of the nginx package to install
+- `nginx_package_state` (default: `present`): Package state (present/absent/latest)
+
+### nginx_service
+
+- `nginx_service_name` (default: `nginx`): Name of the nginx service
+- `nginx_service_state` (default: `started`): Service state (started/stopped/restarted/reloaded)
+- `nginx_service_enabled` (default: `yes`): Whether to enable nginx on boot
+
+## License
+
+GPL-3.0-or-later
