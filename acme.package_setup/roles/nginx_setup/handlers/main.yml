@@ -1,0 +1,16 @@
+---
+- name: Restart nginx
+  ansible.builtin.service:
+    name: "{{ nginx_service_name }}"
+    state: restarted
+  tags:
+    - nginx
+    - services
+
+- name: Reload nginx
+  ansible.builtin.service:
+    name: "{{ nginx_service_name }}"
+    state: reloaded
+  tags:
+    - nginx
+    - services

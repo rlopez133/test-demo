@@ -1,0 +1,9 @@
+---
+# Package configuration
+nginx_package_name: nginx
+nginx_package_state: present
+
+# Service configuration
+nginx_service_name: nginx
+nginx_service_state: started
+nginx_service_enabled: true
