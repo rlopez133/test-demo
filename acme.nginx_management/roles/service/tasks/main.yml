@@ -1,0 +1,56 @@
+---
+- name: Manage Nginx service lifecycle
+  tags:
+    - nginx
+    - service
+  block:
+    - name: Ensure Nginx service is started
+      ansible.builtin.systemd_service:
+        name: "{{ nginx_service_name }}"
+        state: started
+        daemon_reload: false
+      register: nginx_service_start
+      tags:
+        - service
+        - start
+
+    - name: Ensure Nginx service is enabled on boot
+      ansible.builtin.systemd_service:
+        name: "{{ nginx_service_name }}"
+        enabled: true
+        daemon_reload: false
+      register: nginx_service_enable
+      tags:
+        - service
+        - enable
+
+    - name: Display Nginx service status
+      ansible.builtin.debug:
+        msg:
+          - "Nginx service ({{ nginx_service_name }}) has been started: {{ nginx_service_start is changed }}"
+          - "Nginx service ({{ nginx_service_name }}) is enabled on boot: {{ nginx_service_enable is changed }}"
+      tags:
+        - service
+        - status
+
+    - name: Get Nginx service facts
+      ansible.builtin.service_facts:
+      register: service_facts
+      tags:
+        - service
+        - status
+
+    - name: Verify Nginx service is running
+      ansible.builtin.assert:
+        that:
+          - service_facts.ansible_facts.services[nginx_service_name ~ '.service'].state == 'running'
+        fail_msg: "Nginx service is not in running state"
+        success_msg: "Nginx service is running correctly"
+      tags:
+        - service
+        - verify
+
+  rescue:
+    - name: Display service management error
+      ansible.builtin.fail:
+        msg: "Failed to manage Nginx service {{ nginx_service_name }}. Please check system logs and service availability."

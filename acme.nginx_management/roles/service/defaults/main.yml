@@ -1,0 +1,8 @@
+---
+# Nginx service name (user-overridable)
+# Change this value if using a different service name on your system
+nginx_service_name: nginx
+
+# Nginx listening port (used for health checks)
+# Change this if Nginx is configured to listen on a different port
+nginx_port: 80
