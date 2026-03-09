@@ -1,40 +1,45 @@
-# Acme Package Setup Collection
+# ACME Package Setup Collection
 
-This collection provides Ansible roles for installing packages and managing services in a consistent and idempotent manner.
+This collection provides roles for installing packages and managing their associated services with proper lifecycle control.
 
 ## Roles
 
 ### package_installer
-Installs system packages using the appropriate package manager for the target system.
+
+Installs and manages system packages using native package managers.
 
 **Variables:**
-- `package_installer_packages`: List of package names to install (default: `[nginx]`)
-- `package_installer_state`: Package state (default: `present`)
+- `package_name`: Name of the package to install (default: nginx)
+- `package_state`: Package state (present/absent) (default: present)
 
 ### service_manager
-Manages system services including startup, stopping, reloading, and enabling services.
+
+Manages service lifecycle (start, stop, enable, disable).
 
 **Variables:**
-- `service_manager_services`: List of service names to manage (default: `[nginx]`)
-- `service_manager_state`: Service state (default: `started`)
-- `service_manager_enabled`: Whether service should start on boot (default: `true`)
+- `service_name`: Name of the service to manage (default: nginx)
+- `service_action`: Service action (started/stopped/restarted/reloaded) (default: started)
+- `service_enabled`: Whether service should start on boot (default: true)
 
-## Usage
-
-Include the collection playbook in your automation:
+## Example Playbook
 
 ```yaml
 - hosts: all
   collections:
     - acme.package_setup
-  tasks:
-    - ansible.builtin.include_role:
-        name: package_installer
-    - ansible.builtin.include_role:
-        name: service_manager
+  roles:
+    - role: package_installer
+      vars:
+        package_name: nginx
+        package_state: present
+    - role: service_manager
+      vars:
+        service_name: nginx
+        service_action: started
+        service_enabled: true
 ```
 
 ## Requirements
 
-- Ansible 2.15 or higher
-- Target systems must have a supported package manager (apt, yum, dnf, etc.)
+- Ansible >= 2.15.0
+- Target systems with systemd or other service managers
