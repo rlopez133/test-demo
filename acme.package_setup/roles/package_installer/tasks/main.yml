@@ -1,43 +1,55 @@
 ---
-- name: Package installer role
-  tags:
-    - package
-    - package_installer
+# Tasks for package_installer role
 
-- name: Update package cache (Debian-based systems)
+- name: Update package cache (Debian/Ubuntu)
   ansible.builtin.apt:
-    update_cache: "{{ update_cache }}"
-    cache_valid_time: "{{ cache_valid_time }}"
+    update_cache: true
+    cache_valid_time: "{{ package_installer_cache_timeout }}"
   when:
-    - ansible_os_family == "Debian"
-    - package_state != "absent"
+    - ansible_pkg_mgr == 'apt'
+    - package_installer_update_cache | bool
   tags:
+    - package_installer
     - package
-    - cache
 
-- name: Install package on Debian-based systems
-  ansible.builtin.apt:
-    name: "{{ package_name }}"
-    state: "{{ package_state }}"
-  when: ansible_os_family == "Debian"
-  register: apt_result
-  tags:
-    - package
-    - install
-
-- name: Install package on RedHat-based systems
+- name: Update package cache (RedHat/EL)
   ansible.builtin.yum:
-    name: "{{ package_name }}"
-    state: "{{ package_state }}"
-  when: ansible_os_family == "RedHat"
-  register: yum_result
+    update_cache: true
+  when:
+    - ansible_pkg_mgr in ['yum', 'dnf']
+    - package_installer_update_cache | bool
   tags:
+    - package_installer
     - package
-    - install
 
-- name: Display installation result
-  ansible.builtin.debug:
-    msg: "Package {{ package_name }} state is now {{ package_state }}"
+- name: Install packages on Debian/Ubuntu systems
+  ansible.builtin.apt:
+    name: "{{ package_installer_packages }}"
+    state: "{{ package_installer_state }}"
+  when: ansible_pkg_mgr == 'apt'
+  register: apt_install_result
   tags:
+    - package_installer
     - package
-    - debug
+
+- name: Install packages on RedHat/EL systems
+  ansible.builtin.yum:
+    name: "{{ package_installer_packages }}"
+    state: "{{ package_installer_state }}"
+  when: ansible_pkg_mgr in ['yum', 'dnf']
+  register: yum_install_result
+  tags:
+    - package_installer
+    - package
+
+- name: Display installation results
+  ansible.builtin.debug:
+    msg: |
+      Package installation completed.
+      State: {{ package_installer_state }}
+      Packages: {{ package_installer_packages | join(', ') }}
+  when:
+    - apt_install_result is defined or yum_install_result is defined
+  tags:
+    - package_installer
+    - package

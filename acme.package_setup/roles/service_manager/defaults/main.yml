@@ -1,15 +1,15 @@
 ---
-# Service manager role defaults
-# These variables control service state management
+# Default variables for service_manager role
 
-# Service name to manage
-service_name: nginx
+# List of services to manage
+service_manager_services:
+  - nginx
 
-# Service state: 'started', 'stopped', 'restarted', 'reloaded'
-service_state: started
+# Service state: started, stopped, restarted, reloaded
+service_manager_state: started
 
-# Whether to enable service on boot
-service_enabled: true
+# Whether service should start on boot
+service_manager_enabled: true
 
-# Daemon reload before managing service (systemd systems)
-daemon_reload: false
+# Daemon reload before managing services (for systemd)
+service_manager_daemon_reload: false

@@ -1,20 +1,20 @@
----
 galaxy_info:
-  role_name: package_installer
-  author: Ansible Automation
-  description: Install and manage system packages
+  author: Ansible Collection Generator
+  description: Role for installing packages on target systems
+  company: Acme
   license: GPL-3.0-or-later
   min_ansible_version: 2.15.0
   platforms:
-    - name: EL
-      versions:
-        - "8"
-        - "9"
     - name: Ubuntu
       versions:
-        - "20.04"
-        - "22.04"
-  tags:
-    - package
-    - system
+        - focal
+        - jammy
+    - name: EL
+      versions:
+        - '8'
+        - '9'
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
 dependencies: []

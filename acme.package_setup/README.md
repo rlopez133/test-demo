@@ -1,26 +1,40 @@
-# ACME Package Setup Collection
+# Acme Package Setup Collection
 
-This collection provides roles for managing package installation and service lifecycle management.
+This collection provides Ansible roles for installing packages and managing services in a consistent and idempotent manner.
 
 ## Roles
 
-### nginx_setup
-Installs the nginx package and ensures the service is started and enabled.
+### package_installer
+Installs system packages using the appropriate package manager for the target system.
+
+**Variables:**
+- `package_installer_packages`: List of package names to install (default: `[nginx]`)
+- `package_installer_state`: Package state (default: `present`)
+
+### service_manager
+Manages system services including startup, stopping, reloading, and enabling services.
+
+**Variables:**
+- `service_manager_services`: List of service names to manage (default: `[nginx]`)
+- `service_manager_state`: Service state (default: `started`)
+- `service_manager_enabled`: Whether service should start on boot (default: `true`)
 
 ## Usage
 
+Include the collection playbook in your automation:
+
 ```yaml
-- name: Setup nginx
-  ansible.builtin.include_role:
-    name: acme.package_setup.nginx_setup
+- hosts: all
+  collections:
+    - acme.package_setup
+  tasks:
+    - ansible.builtin.include_role:
+        name: package_installer
+    - ansible.builtin.include_role:
+        name: service_manager
 ```
 
-## Variables
+## Requirements
 
-All variables are defined in role `defaults/main.yml` and can be overridden at runtime.
-
-- `nginx_package_name`: Name of the nginx package (default: nginx)
-- `nginx_package_state`: Package state - present/absent (default: present)
-- `nginx_service_name`: Name of the nginx service (default: nginx)
-- `nginx_service_state`: Service state - started/stopped/restarted/reloaded (default: started)
-- `nginx_service_enabled`: Whether to enable nginx on boot (default: true)
+- Ansible 2.15 or higher
+- Target systems must have a supported package manager (apt, yum, dnf, etc.)
