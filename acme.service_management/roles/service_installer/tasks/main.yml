@@ -1,0 +1,35 @@
+---
+- name: Update package cache (Debian-based systems)
+  ansible.builtin.apt:
+    cache_valid_time: 3600
+    update_cache: true
+  when: ansible_os_family == "Debian"
+  tags:
+    - package
+    - service_installer
+
+- name: Update package cache (RHEL-based systems)
+  ansible.builtin.yum:
+    update_cache: true
+  when: ansible_os_family == "RedHat"
+  tags:
+    - package
+    - service_installer
+
+- name: Install service package (Debian-based systems)
+  ansible.builtin.apt:
+    name: "{{ service_package_name }}"
+    state: "{{ service_package_state }}"
+  when: ansible_os_family == "Debian"
+  tags:
+    - package
+    - service_installer
+
+- name: Install service package (RHEL-based systems)
+  ansible.builtin.yum:
+    name: "{{ service_package_name }}"
+    state: "{{ service_package_state }}"
+  when: ansible_os_family == "RedHat"
+  tags:
+    - package
+    - service_installer

@@ -1,0 +1,6 @@
+---
+# Package name to install (e.g., nginx, apache2, httpd)
+service_package_name: nginx
+
+# Package state: present (install) or absent (remove)
+service_package_state: present
