@@ -1,5 +1,0 @@
----
-# Package installation defaults
-# package_name: Name of the package to install (required, should be passed as extra vars)
-# package_state: Desired state of the package (present, absent, latest)
-package_state: 'present'

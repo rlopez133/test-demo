@@ -1,8 +1,0 @@
----
-# Service management defaults
-# service_name: Name of the service to manage (required, should be passed as extra vars)
-# service_state: Desired state of the service (started, stopped, restarted, reloaded)
-service_state: 'started'
-
-# service_enabled: Whether the service should be enabled at boot
-service_enabled: true

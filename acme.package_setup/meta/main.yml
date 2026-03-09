@@ -1,6 +1,0 @@
----
-# Collection-level metadata
-
-namespace: acme
-name: package_setup
-version: 1.0.0

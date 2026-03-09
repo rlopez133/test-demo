@@ -1,6 +1,0 @@
----
-# Global variables for package setup playbooks
-# These can be overridden at inventory, group, or host level
-
-# Enable verbose output for debugging
-verbose_mode: false
