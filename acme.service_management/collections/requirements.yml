@@ -1,0 +1,4 @@
+---
+collections:
+  # All modules used in this collection are from ansible.builtin
+  # No external collections are required

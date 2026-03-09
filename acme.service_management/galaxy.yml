@@ -1,0 +1,18 @@
+---
+namespace: acme
+name: service_management
+version: 1.0.0
+readme: README.md
+authors:
+  - Ansible Automation
+description: Collection for managing services including installation, startup, and boot configuration
+license:
+  - GPL-3.0-or-later
+repository: https://github.com/acme/service_management
+documentation: https://github.com/acme/service_management
+issues: https://github.com/acme/service_management/issues
+tags:
+  - service
+  - management
+  - web
+dependencies: {}
