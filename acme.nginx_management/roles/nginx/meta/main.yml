@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  author: Ansible Automation
+  description: Manages nginx web server installation and service lifecycle
+  company: ACME
+  license: GPL-3.0-or-later
+  min_ansible_version: 2.15.0
+  platforms:
+    - name: EL
+      versions:
+        - '8'
+        - '9'
+    - name: Ubuntu
+      versions:
+        - 'focal'
+        - 'jammy'
+    - name: Debian
+      versions:
+        - '11'
+        - '12'
+  tags:
+    - nginx
+    - webserver
+    - package
+    - service
+
+dependencies: []

@@ -1,0 +1,38 @@
+---
+- name: Deploy and manage nginx web server
+  hosts: all
+  become: true
+  gather_facts: true
+  collections:
+    - acme.nginx_management
+
+  pre_tasks:
+    - name: Display host information
+      ansible.builtin.debug:
+        msg: "Managing nginx on {{ inventory_hostname }}"
+      tags:
+        - always
+
+  roles:
+    - role: nginx
+      tags:
+        - nginx
+
+  post_tasks:
+    - name: Verify nginx is running
+      ansible.builtin.service_facts:
+      register: services
+      tags:
+        - nginx
+        - verify
+
+    - name: Report nginx service status
+      ansible.builtin.debug:
+        msg:
+          - "Service Name: {{ ngninx_service_name }}"
+          - "Service State: {{ services.ansible_facts.services[ngninx_service_name + '.service'].state }}"
+          - "Service Status: {{ services.ansible_facts.services[ngninx_service_name + '.service'].status }}"
+      when: (ngninx_service_name + '.service') in services.ansible_facts.services
+      tags:
+        - nginx
+        - verify

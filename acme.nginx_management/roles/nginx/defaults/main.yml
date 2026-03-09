@@ -1,0 +1,9 @@
+---
+# Package management variables
+ngninx_package_name: nginx
+ngninx_package_state: present
+
+# Service management variables
+ngninx_service_name: nginx
+ngninx_service_state: started
+ngninx_service_enabled: true
