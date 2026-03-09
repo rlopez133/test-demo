@@ -1,0 +1,28 @@
+---
+- name: Install nginx package
+  ansible.builtin.package:
+    name: "{{ ngninx_package_name }}"
+    state: "{{ ngninx_package_state }}"
+  register: nginx_install_result
+  tags:
+    - nginx
+    - package
+
+- name: Start nginx service
+  ansible.builtin.service:
+    name: "{{ ngninx_service_name }}"
+    state: "{{ ngninx_service_state }}"
+    enabled: "{{ ngninx_service_enabled }}"
+  register: nginx_service_result
+  tags:
+    - nginx
+    - service
+
+- name: Display nginx installation and service status
+  ansible.builtin.debug:
+    msg:
+      - "Nginx package installation status: {{ nginx_install_result.changed }}"
+      - "Nginx service management status: {{ nginx_service_result.changed }}"
+  tags:
+    - nginx
+    - debug
