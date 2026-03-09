@@ -1,0 +1,27 @@
+---
+# defaults/main.yml - Default variables for the nginx role
+# All variables below can be overridden in inventory group_vars,
+# host_vars, or at the playbook level.
+#
+# ---------------------------------------------------------------
+# No secrets are required for this role.
+# If nginx is configured with SSL or auth in future extensions,
+# use vault variables following the pattern: {{ vault_<name> }}
+# ---------------------------------------------------------------
+
+# Package configuration
+# The name of the package to install via the system package manager
+nginx_package_name: "nginx"
+
+# The desired state of the package: present, absent, latest
+nginx_package_state: "present"
+
+# Service configuration
+# The name of the system service to manage
+nginx_service_name: "nginx"
+
+# The desired runtime state of the service: started, stopped, restarted, reloaded
+nginx_service_state: "started"
+
+# Whether to enable the service to start on boot
+nginx_service_enabled: true

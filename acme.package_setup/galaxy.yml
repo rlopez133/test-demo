@@ -1,14 +1,21 @@
+---
+# Ansible Galaxy collection metadata
 namespace: acme
 name: package_setup
 version: 1.0.0
-description: Collection for installing and managing packages with service orchestration
-authors:
-  - Ansible Automation
-license:
-  - GPL-3.0-or-later
-repository: https://github.com/acme/package_setup
-bug_tracker: https://github.com/acme/package_setup/issues
-documentation: https://github.com/acme/package_setup/blob/main/README.md
 readme: README.md
-requires_ansible: '>=2.15.0'
+description: >
+  Installs and manages the nginx package and ensures the nginx service
+  is running and enabled on target hosts.
+author:
+  - acme
+license:
+  - GPL-2.0-or-later
+tags:
+  - nginx
+  - package
+  - service
+repository: https://github.com/acme/package_setup
+documentation: https://github.com/acme/package_setup
+homepage: https://github.com/acme/package_setup
 dependencies: {}

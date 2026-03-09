@@ -1,47 +1,19 @@
 ---
-# Main playbook for package setup and service management
-# Orchestrates the installation and startup of system packages
+# playbooks/site.yml - Main entry-point playbook for the acme.package_setup collection
+#
+# Usage:
+#   ansible-playbook playbooks/site.yml -i <inventory>
+#
+# Optional tag filters:
+#   --tags package   -> Only run package installation tasks
+#   --tags service   -> Only run service management tasks
 
-- name: Setup packages and manage services
+- name: "Site | Install and manage nginx"
   hosts: all
-  become: true
   gather_facts: true
-  tags:
-    - always
-
-  pre_tasks:
-    - name: Display target host information
-      ansible.builtin.debug:
-        msg: "Installing and managing services on {{ inventory_hostname }} ({{ ansible_os_family }})"
-      tags:
-        - debug
+  become: false  # become is set per-task inside the role
 
   roles:
-    - name: Install required packages
-      role: acme.package_setup.package_install
+    - role: acme.package_setup.nginx
       tags:
-        - package
-        - always
-
-    - name: Manage and start services
-      role: acme.package_setup.service_manage
-      tags:
-        - service
-        - always
-
-  post_tasks:
-    - name: Verify service is running
-      ansible.builtin.systemd:
-        name: "{{ service_name }}"
-      register: service_status
-      tags:
-        - service
-        - verify
-
-    - name: Display service status
-      ansible.builtin.debug:
-        msg: "Service {{ service_name }} status: {{ service_status.status.ActiveState }}"
-      tags:
-        - service
-        - verify
-        - debug
+        - nginx
