@@ -1,21 +1,22 @@
 # Service Manager Role
 
-This role manages system services in an idempotent manner using systemd.
+This role manages the lifecycle of system services using systemd, including starting, stopping, enabling, and disabling services.
 
-## Role Variables
+## Purpose
 
-### Default Variables
+The service_manager role provides a standardized way to manage services across systems. It handles service state transitions (start, stop, restart, reload) and boot-time enablement.
 
-- `service_manager_services`: List of service names to manage (default: `['nginx']`)
-- `service_manager_state`: Desired state - `started`, `stopped`, `restarted`, or `reloaded` (default: `started`)
-- `service_manager_enabled`: Whether service should start on boot (default: `true`)
-- `service_manager_daemon_reload`: Whether to reload systemd daemon before managing services (default: `false`)
+## Variables
 
-## Supported Platforms
+### Required
 
-- Ubuntu (Focal, Jammy)
-- Debian (Bullseye, Bookworm)
-- RHEL/CentOS/AlmaLinux (8, 9)
+None. All variables have sensible defaults.
+
+### Optional
+
+- `service_name` (string): Name of the service to manage. Default: `nginx`
+- `service_action` (string): Desired service action (`started`, `stopped`, `restarted`, `reloaded`). Default: `started`
+- `service_enabled` (boolean): Whether service should auto-start on boot. Default: `true`
 
 ## Example Usage
 
@@ -24,18 +25,32 @@ This role manages system services in an idempotent manner using systemd.
   roles:
     - role: acme.package_setup.service_manager
       vars:
-        service_manager_services:
-          - nginx
-          - postgresql
-        service_manager_state: started
-        service_manager_enabled: true
+        service_name: nginx
+        service_action: started
+        service_enabled: true
 ```
 
-## Task Tags
+## Tags
 
-- `service_manager`: All tasks in this role
-- `service`: Service-related operations
+- `service`: All service-related tasks
+- `manage`: Service management tasks
+- `verify`: Service verification tasks
+- `info`: Information gathering and display tasks
+- `error`: Error handling tasks
+
+## Requirements
+
+- Ansible >= 2.15.0
+- systemd service manager on target system
+- Become/sudo privileges on target system
+
+## Idempotency
+
+This role is fully idempotent. It checks current service state before making changes and only takes action when necessary.
 
 ## Handlers
 
-- `restart services`: Restarts all managed services
+This role includes handlers for:
+- Service restart (triggered by `restart <service_name>`)
+- Service reload (triggered by `reload <service_name>`)
+- Service enable on boot (triggered by `enable <service_name>`)

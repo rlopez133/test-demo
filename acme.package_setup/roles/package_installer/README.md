@@ -1,21 +1,21 @@
 # Package Installer Role
 
-This role installs system packages in an idempotent manner across different Linux distributions.
+This role installs and manages system packages using the native package manager of the target system.
 
-## Role Variables
+## Purpose
 
-### Default Variables
+The package_installer role abstracts package management across different operating systems (RedHat, Debian, etc.) by using the `ansible.builtin.package` module, which automatically selects the correct package manager.
 
-- `package_installer_packages`: List of package names to install (default: `['nginx']`)
-- `package_installer_state`: Desired state of packages - `present`, `absent`, or `latest` (default: `present`)
-- `package_installer_update_cache`: Whether to update package cache before installation (default: `true`)
-- `package_installer_cache_timeout`: Cache validation timeout in seconds (default: `3600`)
+## Variables
 
-## Supported Platforms
+### Required
 
-- Ubuntu (Focal, Jammy)
-- Debian (Bullseye, Bookworm)
-- RHEL/CentOS/AlmaLinux (8, 9)
+None. All variables have sensible defaults.
+
+### Optional
+
+- `package_name` (string): Name of the package to manage. Default: `nginx`
+- `package_state` (string): Desired package state (`present`, `absent`). Default: `present`
 
 ## Example Usage
 
@@ -24,14 +24,23 @@ This role installs system packages in an idempotent manner across different Linu
   roles:
     - role: acme.package_setup.package_installer
       vars:
-        package_installer_packages:
-          - nginx
-          - curl
-          - git
-        package_installer_state: present
+        package_name: nginx
+        package_state: present
 ```
 
-## Task Tags
+## Tags
 
-- `package_installer`: All tasks in this role
-- `package`: Package-related operations
+- `package`: All package-related tasks
+- `install`: Package installation tasks
+- `info`: Information gathering tasks
+- `error`: Error handling tasks
+
+## Requirements
+
+- Ansible >= 2.15.0
+- Target system with a supported package manager (apt, yum, dnf, etc.)
+- Become/sudo privileges on target system
+
+## Idempotency
+
+This role is fully idempotent. Running it multiple times with the same variables will produce the same result without making unnecessary changes.

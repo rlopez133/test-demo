@@ -1,15 +1,9 @@
 ---
-# Default variables for package_installer role
+# Package installer default variables
+# These variables control which packages are installed and their desired state
 
-# List of packages to install
-package_installer_packages:
-  - nginx
+# Name of the package to install
+package_name: nginx
 
-# Package state: present, absent, latest
-package_installer_state: present
-
-# Update package cache before installation
-package_installer_update_cache: true
-
-# Cache update timeout in seconds
-package_installer_cache_timeout: 3600
+# Desired state of the package: 'present' to install, 'absent' to remove
+package_state: present
