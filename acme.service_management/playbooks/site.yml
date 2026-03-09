@@ -1,0 +1,6 @@
+---
+- name: Deploy Nginx service
+  hosts: all
+  gather_facts: yes
+  roles:
+    - acme.service_management.nginx_deployment
