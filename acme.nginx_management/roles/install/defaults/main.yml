@@ -1,4 +1,0 @@
----
-# Nginx package name (user-overridable)
-# Change this value if you need to install a different package variant
-ngn ix_package_name: nginx

@@ -1,5 +1,0 @@
----
-# External collection requirements
-# This collection uses only Ansible built-in modules.
-# No external collections are required.
-collections: []
