@@ -1,0 +1,12 @@
+---
+# Package installation settings
+package_name: 'nginx'
+package_state: 'present'
+
+# Service management settings
+service_name: 'nginx'
+service_state: 'started'
+service_enabled: true
+
+# Additional configuration
+service_daemon_reload: false
