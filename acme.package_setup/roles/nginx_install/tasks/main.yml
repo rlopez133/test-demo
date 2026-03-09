@@ -1,69 +1,33 @@
 ---
+- name: Update package cache (Debian/Ubuntu)
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_os_family == 'Debian'
+  tags:
+    - package
+    - nginx_install
+
+- name: Update package cache (RHEL/CentOS)
+  ansible.builtin.yum:
+    update_cache: yes
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - package
+    - nginx_install
+
 - name: Install nginx package
-  block:
-    - name: Install nginx using package manager
-      ansible.builtin.package:
-        name: "{{ nginx_package_name }}"
-        state: "{{ nginx_state }}"
-      notify: Restart nginx service
-      tags:
-        - package
-        - install
+  ansible.builtin.package:
+    name: "{{ nginx_package_name }}"
+    state: "{{ nginx_package_state }}"
+  register: nginx_install_result
+  tags:
+    - package
+    - nginx_install
 
-  rescue:
-    - name: Handle package installation failure
-      ansible.builtin.fail:
-        msg: |
-          Failed to install nginx package: {{ nginx_package_name }}
-          Check that the package manager is configured and the package exists
-      tags:
-        - never
-        - debug
-
-- name: Manage nginx service
-  block:
-    - name: Ensure nginx service is in desired state
-      ansible.builtin.service:
-        name: "{{ nginx_service_name }}"
-        state: "{{ nginx_service_state }}"
-        enabled: "{{ nginx_service_enabled }}"
-      tags:
-        - service
-        - start
-
-  rescue:
-    - name: Handle service management failure
-      ansible.builtin.fail:
-        msg: |
-          Failed to manage nginx service: {{ nginx_service_name }}
-          Verify the service exists and systemd is available
-      tags:
-        - never
-        - debug
-
-- name: Validate nginx installation
-  block:
-    - name: Check if nginx is running
-      ansible.builtin.service_facts:
-      register: service_facts_result
-      tags:
-        - validate
-        - check
-
-    - name: Assert nginx service is running
-      ansible.builtin.assert:
-        that:
-          - service_facts_result.ansible_facts.services[nginx_service_name].state == 'running'
-        fail_msg: "Nginx service is not in running state"
-        success_msg: "Nginx service is running correctly"
-      tags:
-        - validate
-        - check
-
-  rescue:
-    - name: Warn if validation fails
-      ansible.builtin.debug:
-        msg: "Warning: Unable to validate nginx service state. Manual verification recommended."
-      tags:
-        - never
-        - debug
+- name: Display nginx installation result
+  ansible.builtin.debug:
+    msg: "nginx package {{ nginx_package_state }}: {{ nginx_install_result.changed }}"
+  tags:
+    - package
+    - nginx_install

@@ -1,20 +1,6 @@
 ---
-- name: Restart nginx service
-  ansible.builtin.systemd:
-    name: "{{ service_name }}"
-    state: restarted
-    daemon_reload: "{{ service_daemon_reload }}"
-  tags:
-    - service
-    - nginx
-    - nginx_service
-
-- name: Reload nginx service
-  ansible.builtin.systemd:
-    name: "{{ service_name }}"
+- name: Reload nginx configuration
+  ansible.builtin.service:
+    name: "{{ nginx_service_name }}"
     state: reloaded
-    daemon_reload: "{{ service_daemon_reload }}"
-  tags:
-    - service
-    - nginx
-    - nginx_service
+  listen: reload nginx
