@@ -1,83 +1,41 @@
 # Service Manager Role
 
-Manages system service states (start, stop, restart, reload) and configures service startup behavior using systemd.
+This role manages system services in an idempotent manner using systemd.
 
 ## Role Variables
 
-### Required
+### Default Variables
 
-None - all variables have sensible defaults.
-
-### Optional
-
-- `service_name` (default: `nginx`): Name of the service to manage
-- `service_state` (default: `started`): State of the service (started, stopped, restarted, reloaded)
-- `service_enabled` (default: `true`): Whether to enable the service on boot
-- `daemon_reload` (default: `false`): Perform systemd daemon reload before managing service
-
-## Examples
-
-### Start and enable a service
-
-```yaml
----
-- name: Start nginx
-  hosts: webservers
-  roles:
-    - role: acme.package_setup.service_manager
-      vars:
-        service_name: nginx
-        service_state: started
-        service_enabled: true
-```
-
-### Stop a service
-
-```yaml
----
-- name: Stop apache2
-  hosts: webservers
-  roles:
-    - role: acme.package_setup.service_manager
-      vars:
-        service_name: apache2
-        service_state: stopped
-        service_enabled: false
-```
-
-### Restart a service
-
-```yaml
----
-- name: Restart nginx
-  hosts: webservers
-  roles:
-    - role: acme.package_setup.service_manager
-      vars:
-        service_name: nginx
-        service_state: restarted
-```
-
-### Reload service configuration
-
-```yaml
----
-- name: Reload nginx config
-  hosts: webservers
-  roles:
-    - role: acme.package_setup.service_manager
-      vars:
-        service_name: nginx
-        service_state: reloaded
-```
+- `service_manager_services`: List of service names to manage (default: `['nginx']`)
+- `service_manager_state`: Desired state - `started`, `stopped`, `restarted`, or `reloaded` (default: `started`)
+- `service_manager_enabled`: Whether service should start on boot (default: `true`)
+- `service_manager_daemon_reload`: Whether to reload systemd daemon before managing services (default: `false`)
 
 ## Supported Platforms
 
-- Red Hat Enterprise Linux 8, 9
-- CentOS 8, 9
-- Ubuntu 20.04, 22.04
-- Debian 10, 11, 12
+- Ubuntu (Focal, Jammy)
+- Debian (Bullseye, Bookworm)
+- RHEL/CentOS/AlmaLinux (8, 9)
 
-## Notes
+## Example Usage
 
-This role uses `ansible.builtin.systemd_service` module and requires systems with systemd.
+```yaml
+- hosts: webservers
+  roles:
+    - role: acme.package_setup.service_manager
+      vars:
+        service_manager_services:
+          - nginx
+          - postgresql
+        service_manager_state: started
+        service_manager_enabled: true
+```
+
+## Task Tags
+
+- `service_manager`: All tasks in this role
+- `service`: Service-related operations
+
+## Handlers
+
+- `restart services`: Restarts all managed services

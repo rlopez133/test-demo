@@ -1,0 +1,42 @@
+---
+# Example playbook: Set up nginx web server
+# Installs nginx package and starts the nginx service
+
+- name: Example nginx web server setup
+  hosts: webservers
+  gather_facts: true
+  collections:
+    - acme.package_setup
+  
+  vars:
+    # Override defaults for nginx-specific setup
+    package_installer_packages:
+      - nginx
+    package_installer_state: present
+    service_manager_services:
+      - nginx
+    service_manager_state: started
+    service_manager_enabled: true
+  
+  tasks:
+    - name: Install nginx package
+      ansible.builtin.include_role:
+        name: package_installer
+      tags:
+        - install
+    
+    - name: Start and enable nginx service
+      ansible.builtin.include_role:
+        name: service_manager
+      tags:
+        - start
+    
+    - name: Verify nginx is accessible
+      ansible.builtin.uri:
+        url: 'http://localhost'
+        status_code: 200
+      register: nginx_check
+      retries: 3
+      delay: 2
+      tags:
+        - verify

@@ -1,18 +1,12 @@
----
 namespace: acme
 name: package_setup
 version: 1.0.0
-readme: README.md
+description: A collection for installing and managing packages with service orchestration
 authors:
-  - Ansible Developer
-description: Collection for managing package installation and service lifecycle
+  - Ansible Collection Generator
 license:
-  - Apache-2.0
+  - GPL-3.0-or-later
 repository: https://github.com/acme/package_setup
-bugs: https://github.com/acme/package_setup/issues
-documentation: https://github.com/acme/package_setup
-tags:
-  - package
-  - service
-  - system
+issues: https://github.com/acme/package_setup/issues
+readme: README.md
 dependencies: {}

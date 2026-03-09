@@ -1,2 +1,3 @@
 ---
-collections: []
+# External collection dependencies for acme.package_setup
+# No external collections required - this collection uses only ansible.builtin modules

@@ -1,3 +1,6 @@
----
 requires_ansible: '>=2.15.0'
-plugin_routing: {}
+actions:
+  acme.package_setup.package_installer:
+    plugin_type: role
+  acme.package_setup.service_manager:
+    plugin_type: role

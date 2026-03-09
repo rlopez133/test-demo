@@ -1,17 +1,22 @@
 ---
-- name: ACME Package Setup Playbook
+# Main playbook for acme.package_setup collection
+# This playbook orchestrates package installation and service management
+
+- name: Install packages and manage services
   hosts: all
   gather_facts: true
+  collections:
+    - acme.package_setup
+  
   tasks:
-    - name: Include nginx_setup role
+    - name: Install required packages
       ansible.builtin.include_role:
-        name: acme.package_setup.nginx_setup
-        apply:
-          tags:
-            - nginx
-            - packages
-            - services
+        name: package_installer
       tags:
-        - nginx
         - packages
+    
+    - name: Manage services
+      ansible.builtin.include_role:
+        name: service_manager
+      tags:
         - services
