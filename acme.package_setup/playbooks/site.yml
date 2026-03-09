@@ -1,19 +1,17 @@
 ---
-# playbooks/site.yml - Main entry-point playbook for the acme.package_setup collection
-#
-# Usage:
-#   ansible-playbook playbooks/site.yml -i <inventory>
-#
-# Optional tag filters:
-#   --tags package   -> Only run package installation tasks
-#   --tags service   -> Only run service management tasks
-
-- name: "Site | Install and manage nginx"
+- name: ACME Package Setup Playbook
   hosts: all
   gather_facts: true
-  become: false  # become is set per-task inside the role
-
-  roles:
-    - role: acme.package_setup.nginx
+  tasks:
+    - name: Include nginx_setup role
+      ansible.builtin.include_role:
+        name: acme.package_setup.nginx_setup
+        apply:
+          tags:
+            - nginx
+            - packages
+            - services
       tags:
         - nginx
+        - packages
+        - services

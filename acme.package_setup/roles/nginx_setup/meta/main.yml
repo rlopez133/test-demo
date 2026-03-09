@@ -1,0 +1,20 @@
+---
+namespace: acme
+name: nginx_setup
+role_name: nginx_setup
+description: Install and manage nginx package and service
+keywords:
+  - nginx
+  - package
+  - service
+supported_platforms:
+  - name: EL
+    versions:
+      - all
+  - name: Ubuntu
+    versions:
+      - all
+  - name: Debian
+    versions:
+      - all
+min_ansible_version: '2.15.0'

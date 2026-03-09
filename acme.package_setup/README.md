@@ -1,91 +1,26 @@
-# acme.package_setup
+# ACME Package Setup Collection
 
-An Ansible collection that installs the **nginx** package and ensures the
-**nginx** service is running and enabled on target hosts.
-
-## Requirements
-
-- ansible-core >= 2.15.0
-- Privilege escalation (`become`) must be available on target hosts
-
-## Collection Structure
-
-```
-galaxy.yml
-meta/runtime.yml
-roles/
-  nginx/
-    tasks/main.yml        # Install package and manage service
-    handlers/main.yml     # Restart / reload handlers
-    defaults/main.yml     # Overridable default variables
-    meta/main.yml         # Role metadata
-playbooks/
-  site.yml                # Main entry-point playbook
-collections/
-  requirements.yml        # External collection dependencies
-```
+This collection provides roles for managing package installation and service lifecycle management.
 
 ## Roles
 
-### `nginx`
-
-Installs the nginx package via the system package manager and ensures the
-nginx service is started and enabled at boot.
-
-#### Default Variables
-
-| Variable | Default | Description |
-|---|---|---|
-| `nginx_package_name` | `nginx` | Package name to install |
-| `nginx_package_state` | `present` | Desired package state |
-| `nginx_service_name` | `nginx` | System service name |
-| `nginx_service_state` | `started` | Desired service runtime state |
-| `nginx_service_enabled` | `true` | Enable service on boot |
+### nginx_setup
+Installs the nginx package and ensures the service is started and enabled.
 
 ## Usage
 
-### Install the collection
-
-```bash
-ansible-galaxy collection install acme.package_setup
-```
-
-### Run the main playbook
-
-```bash
-ansible-playbook playbooks/site.yml -i inventory/hosts
-```
-
-### Run only package tasks
-
-```bash
-ansible-playbook playbooks/site.yml -i inventory/hosts --tags package
-```
-
-### Run only service tasks
-
-```bash
-ansible-playbook playbooks/site.yml -i inventory/hosts --tags service
-```
-
-### Override variables
-
 ```yaml
-# group_vars/webservers.yml
-nginx_package_state: latest
-nginx_service_enabled: true
+- name: Setup nginx
+  ansible.builtin.include_role:
+    name: acme.package_setup.nginx_setup
 ```
 
-## Secret Handling
+## Variables
 
-No secrets are required for this role. If future extensions require SSL
-certificates or HTTP authentication, follow the vault variable convention:
+All variables are defined in role `defaults/main.yml` and can be overridden at runtime.
 
-```yaml
-# vault_ssl_private_key: PEM-encoded private key for nginx TLS
-nginx_ssl_key: "{{ vault_ssl_private_key }}"
-```
-
-## License
-
-GPL-2.0-or-later
+- `nginx_package_name`: Name of the nginx package (default: nginx)
+- `nginx_package_state`: Package state - present/absent (default: present)
+- `nginx_service_name`: Name of the nginx service (default: nginx)
+- `nginx_service_state`: Service state - started/stopped/restarted/reloaded (default: started)
+- `nginx_service_enabled`: Whether to enable nginx on boot (default: true)

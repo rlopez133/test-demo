@@ -1,10 +1,2 @@
 ---
-# collections/requirements.yml
-# Lists external Ansible collection dependencies required by this collection.
-#
-# Install with:
-#   ansible-galaxy collection install -r collections/requirements.yml
-#
-# NOTE: This collection uses only ansible.builtin modules, so no
-# additional collections are required at this time.
 collections: []

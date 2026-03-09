@@ -1,0 +1,26 @@
+---
+- name: Nginx Setup - Install and Manage Service
+  block:
+    - name: Install nginx package
+      ansible.builtin.package:
+        name: "{{ nginx_package_name }}"
+        state: "{{ nginx_package_state }}"
+      register: nginx_package_result
+      tags:
+        - nginx
+        - packages
+
+    - name: Ensure nginx service is {{ nginx_service_state }}
+      ansible.builtin.service:
+        name: "{{ nginx_service_name }}"
+        state: "{{ nginx_service_state }}"
+        enabled: "{{ nginx_service_enabled }}"
+      tags:
+        - nginx
+        - services
+      when: nginx_package_state == 'present'
+
+  rescue:
+    - name: Display error message
+      ansible.builtin.debug:
+        msg: "Failed to complete nginx setup: {{ ansible_failed_result.msg }}"
