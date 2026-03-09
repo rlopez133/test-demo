@@ -1,21 +1,14 @@
 ---
-- name: Configure nginx package and service
+- name: ACME Package Setup Playbook
   hosts: all
-  gather_facts: yes
-  tags:
-    - nginx
-    - package
-    - service
+  gather_facts: true
+  tasks:
+    - name: Include package installer role
+      ansible.builtin.include_role:
+        name: acme.package_setup.package_installer
+      when: package_installer_packages is defined
 
-  roles:
-    - name: Install nginx package
-      role: acme.package_setup.nginx_install
-      tags:
-        - nginx_install
-        - package
-
-    - name: Manage nginx service
-      role: acme.package_setup.nginx_service
-      tags:
-        - nginx_service
-        - service
+    - name: Include service manager role
+      ansible.builtin.include_role:
+        name: acme.package_setup.service_manager
+      when: service_manager_services is defined

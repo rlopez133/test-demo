@@ -1,9 +1,7 @@
----
 galaxy_info:
-  author: Ansible Automation Team
-  description: Manage service lifecycle (start, stop, enable, disable)
-  license:
-    - Apache-2.0
+  author: Ansible Automation
+  description: Role for managing system service state and enablement
+  license: GPL-3.0-or-later
   min_ansible_version: 2.15.0
   platforms:
     - name: EL
@@ -14,8 +12,13 @@ galaxy_info:
       versions:
         - 20.04
         - 22.04
+        - 24.04
+    - name: Debian
+      versions:
+        - 11
+        - 12
   tags:
     - service
-    - lifecycle
+    - system
 
 dependencies: []
